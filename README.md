@@ -26,7 +26,7 @@ This repository contains lab exercises focused on securing a small office/home o
 - 🖨️ **[Secure SOHO Printer Configuration](secure-soho-network-lab/)**  
   Hardens a wireless home printer using static IP reservation, VLAN segmentation, and host-based Windows Firewall rules to restrict port-level access and reduce lateral movement risk. Includes network diagram and documented audit.
 
-- 🖨️ **[Printer Firewall Hardening](./printer-firewall-hardening/README.md)**  
+- 🖨️ **[Printer Firewall Hardening](/printer-firewall-hardening/README.md)**  
   Step-by-step Windows Firewall rule configuration to prevent public access to printers while maintaining local and cloud printing capabilities
 
 > More labs coming soon (Sysmon logging, Nessus vulnerability scans, Raspberry Pi SIEM integration)
