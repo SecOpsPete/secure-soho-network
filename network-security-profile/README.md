@@ -17,6 +17,11 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 | **External Exposure**         | ★★★★☆       | CGNAT via Starlink, VPN with NordVPN, no services exposed externally  |
 | **Vulnerability Management**  | ★★★★☆       | Manual patching + Nessus scanning in place                            |
 
+<br>
+<div align="center">
+  <img src="images/securityiscool.png" alt="Security is Cool Image" width="100%">
+</div>
+
 ---
 
 ## 🧱 Network Segmentation & VLANs
