@@ -23,8 +23,8 @@ This repository contains lab exercises focused on securing a small office/home o
 
 ## 🧪 SOHO Network Labs
 
-- 🖨️ **[Secure SOHO Printer Configuration](secure-soho-network-lab/)**  
-  Hardens a wireless home printer using static IP reservation, VLAN segmentation, and host-based Windows Firewall rules to restrict port-level access and reduce lateral movement risk. Includes network diagram and documented audit.
+- 🖨️ **[Secure SOHO Network Configuration Lab](secure-soho-network-lab/)**  
+  This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
 
 - 🖨️ **[Printer Firewall Hardening](https://github.com/SecOpsPete/cybersecurity-tools/blob/main/printer-firewall-hardening/README.md)**  
   Step-by-step Windows Firewall rule configuration to prevent public access to printers while maintaining local and cloud printing capabilities
