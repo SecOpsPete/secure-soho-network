@@ -7,7 +7,7 @@ This lab documents the architecture and configuration of a secure, segmented hom
 ## 🌐 Network Diagram
 
 <div align="center">
-  <img src="images/Home_Network_Security_Lab_Dia.png" alt="Home Network Diagram" width="70%">
+  <img src="images/Home_Network_Security_Lab_Dia.png" alt="Home Network Diagram" width="50%">
 </div>
 
 ---
