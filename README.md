@@ -31,9 +31,19 @@ This repository contains lab exercises focused on securing a small office/home o
 
 ## 📸 Network Diagram
 
-<p align="center">
-  <img src="secure-soho-network-lab/images/Home_Network_Security_Lab_Dia.png" width="50%">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="secure-soho-network-lab/images/Home_Network_Security_Lab_Dia.png" width="45%"><br>
+      <sub>Secure SOHO Network</sub>
+    </td>
+    <td align="center">
+      <img src="secure-soho-network-lab/images/badass.png" width="45%"><br>
+      <sub>Feel the Power!</sub>
+    </td>
+  </tr>
+</table>
 
+---
 
 
