@@ -6,7 +6,9 @@ This lab documents the architecture and configuration of a secure, segmented hom
 
 ## 🌐 Network Diagram
 
-![Home Network Diagram](Home_Network_Security_Lab_Diagram.png)
+<div align="center">
+  <img src="images/Home_Network_Security_Lab_Diagram.png" alt="Home Network Diagram" width="70%">
+</div>
 
 ---
 
@@ -40,6 +42,15 @@ This lab documents the architecture and configuration of a secure, segmented hom
 | IPv4 Inbound Rules | ❌ Disabled |
 | Port Forwarding | ❌ Disabled |
 
+<br>
+
+
+<div align="center">
+  <img src="images/Firewall.png" alt="Home Network Diagram" width="70%">
+</div>
+
+
+
 ---
 
 ## 🧠 AiProtection (Trend Micro)
@@ -60,6 +71,13 @@ This lab documents the architecture and configuration of a secure, segmented hom
 - ✅ Auto-reconnect enabled
 - ✅ “Start with WAN” enabled
 - ✅ Only selected devices routed through VPN
+<br>
+<div align="center">
+  <img src="images/Fusion.png" alt="Home Network Diagram" width="70%">
+</div>
+
+
+---
 
 ### Device Routing Table
 
