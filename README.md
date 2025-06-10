@@ -1,4 +1,4 @@
-# 🛡️ Home Network Security Lab – SecOpsPete
+# 🛡️ Home Network Security Lab
 
 This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
 
