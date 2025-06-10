@@ -21,6 +21,19 @@ This repository contains lab exercises focused on securing a small office/home o
 
 ---
 
+## 🧪 SOHO Network Labs
+
+- 🖨️ **[Secure SOHO Printer Configuration](secure-soho-network-lab/)**  
+  Hardens a wireless home printer using static IP reservation, VLAN segmentation, and host-based Windows Firewall rules to restrict port-level access and reduce lateral movement risk. Includes network diagram and documented audit.
+
+> More labs coming soon (Sysmon logging, Nessus vulnerability scans, Raspberry Pi SIEM integration)
+
+
 ## 📸 Network Diagram
 
-![Home Network Diagram](secure-soho-network-lab/images/Home_Network_Security_Lab_Diagram.png)
+<p align="center">
+  <img src="secure-soho-network-lab/images/Home_Network_Security_Lab_Dia.png" width="50%">
+</p>
+
+
+
