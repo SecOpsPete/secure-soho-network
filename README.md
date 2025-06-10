@@ -133,6 +133,12 @@ This lab documents the architecture and configuration of a secure, segmented hom
 | Laptops / PCs | VPN-routed trusted devices |
 | IoT Devices | Segmented via guest network |
 
+
+<br>
+<div align="center">
+  <img src="images/badass.png" alt="Home Network Diagram" width="100%">
+</div>
+
 ---
 
 ## 🗂️ Future Enhancements
