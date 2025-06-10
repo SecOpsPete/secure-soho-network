@@ -29,7 +29,7 @@ This repository contains lab exercises focused on securing a small office/home o
 - 🖨️ **[Printer Firewall Hardening](https://github.com/SecOpsPete/cybersecurity-tools/blob/main/printer-firewall-hardening/README.md)**  
   Step-by-step Windows Firewall rule configuration to prevent public access to printers while maintaining local and cloud printing capabilities.
   
-- 🛡️ **[Secure Network Security Profile](https://secure-network-profile/blob/main/README.md)**  
+- 🛡️ **[Secure Network Security Profile](https://network-security-profile/blob/main/README.md)**  
   Assesses and documents the security posture of a small office/home office (SOHO) network. Highlights layered defenses including VLAN segmentation, BitLocker encryption, firewall rules, router hardening, and endpoint protections. Includes architectural diagram and syslog integration via Raspberry Pi.
 
 
