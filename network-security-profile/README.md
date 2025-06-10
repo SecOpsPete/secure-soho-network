@@ -87,4 +87,3 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 
 This lab reflects professional-grade SOHO security architecture. It combines network segmentation, host-level hardening, threat surface reduction, and responsible monitoring — all within a manageable and replicable home setup.
 
-> ✅ Ready for use in security portfolio, resume bullet points, and project documentation.
