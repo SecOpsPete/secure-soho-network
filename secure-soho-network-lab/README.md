@@ -96,17 +96,81 @@ This lab documents the architecture and configuration of a secure, segmented hom
 
 ### Raspberry Pi 4 Syslog Server
 
-| Component | Configuration |
-|-----------|----------------|
-| Hardware | Raspberry Pi 4B (4GB) |
-| OS | Raspberry Pi OS Lite |
-| Logging Tool | `rsyslog` |
-| Syslog Port | UDP 514 |
-| Static IP | `192.168.50.100` |
-| Function | Centralized logging for ASUS router via Remote Log Server |
-| Log Access | `/var/log/syslog`, `journalctl`, or via SSH |
+| Component     | Configuration                                         |
+|---------------|-------------------------------------------------------|
+| Hardware      | Raspberry Pi 4B (4GB RAM)                             |
+| OS            | Raspberry Pi OS Lite                                 |
+| Logging Tool  | `rsyslog`                                             |
+| Syslog Port   | UDP 514                                               |
+| Static IP     | `192.168.50.100`                                      |
+| Function      | Receives router logs and forwards them to ELK stack  |
+| Log Access    | `/var/log/syslog`, `journalctl`, or view in Kibana   |
 
-> Logs include kernel events, DHCP leases, firewall activity, and wireless association logs.
+> The Raspberry Pi collects system logs from the ASUS router and securely forwards them to a Logstash container running on the desktop. Log lifecycle is controlled via Elasticsearch ILM (7-day retention).
+
+---
+
+### ELK Stack Integration (Desktop)
+
+| Component        | Details                                                    |
+|------------------|------------------------------------------------------------|
+| Logstash         | Listens on TCP/UDP 5000 for JSON logs                      |
+| Elasticsearch    | Stores logs in `logs-generic-default` data stream         |
+| Kibana           | Used to visualize and query logs from the Pi and router   |
+| ILM Policy       | Retains logs for 7 days, deletes automatically afterward   |
+
+> The ELK stack is running in Docker on a Windows desktop. Logstash is configured to accept logs on port 5000 and forward them into Elasticsearch with a retention policy.
+
+---
+
+### Raspberry Pi Setup Summary
+
+1. **SSH Enabled** via blank `ssh` file on boot volume.
+2. **Static IP Set**: `192.168.50.100`
+3. **Installed rsyslog**:
+   ```bash
+   sudo apt update && sudo apt install -y rsyslog
+   ```
+4. **Configured `/etc/rsyslog.conf`**:
+   ```conf
+   module(load="imudp")
+   input(type="imudp" port="514")
+
+   *.* @@192.168.50.3:5000
+   ```
+   > Forwarding logs to Logstash listener on desktop (`192.168.50.3`).
+
+5. **Restarted Service**:
+   ```bash
+   sudo systemctl restart rsyslog
+   ```
+
+---
+
+### Validation
+
+| Check                              | Result                    |
+|------------------------------------|---------------------------|
+| Log received by Raspberry Pi       | ✅ Verified via `journalctl` |
+| Forwarded to ELK stack             | ✅ Seen in Kibana Discover |
+| Log Retention Functionality        | ✅ ILM 7-day delete policy |
+| Query Test in Kibana               | ✅ `@timestamp < now-7d/d` returns no results |
+
+---
+
+### Additional Notes
+
+- Confirmed `logstash.conf` uses JSON codec for both TCP/UDP on port 5000.
+- All data is centralized in Kibana for easy visualization and alerting.
+- ILM policies are enforced through the Kibana UI with confirmed deletion timelines.
+- Dashboard visualizations are filtered to reflect only current, retained logs.
+
+```bash
+# From Raspberry Pi to test logging:
+logger "Test syslog message from Raspberry Pi"
+```
+
+✅ The Raspberry Pi syslog server is now fully integrated and operational
 
 ---
 
