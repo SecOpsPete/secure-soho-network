@@ -1,4 +1,3 @@
-
 # 🛡️ Home Network Security Posture Audit
 
 This audit summarizes the current state of the SOHO (Small Office/Home Office) network security lab. It reflects layered defenses, segmentation, endpoint hardening, and monitoring practices implemented as of June 2025.
@@ -13,8 +12,8 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 | **Router Hardening**          | ★★★★☆       | High-end router with static IPs, local management, and secure WiFi    |
 | **Endpoint Protection**       | ★★★★☆       | BitLocker, Defender, Malwarebytes, Windows Firewall hardening         |
 | **Printer Security**          | ★★★★★       | Static IP, strict inbound/outbound rules, public port blocking        |
-| **Threat Monitoring**         | ★★★☆☆       | Nessus Essentials + Raspberry Pi syslog collection planned            |
-| **External Exposure**         | ★★★★☆       | CGNAT via Starlink, VPN with NordVPN, no services exposed externally  |
+| **Threat Monitoring**         | ★★★★☆       | Raspberry Pi syslog server + ELK integration + Fail2Ban              |
+| **External Exposure**         | ★★★★★       | CGNAT via Starlink, no services exposed, VPN required outbound        |
 | **Vulnerability Management**  | ★★★★☆       | Manual patching + Nessus scanning in place                            |
 
 <br>
@@ -59,10 +58,16 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 
 ## 🔍 Threat Detection & Monitoring
 
-- ✅ Nessus Essentials scanning planned and partially implemented
-- 📡 Raspberry Pi being deployed as a syslog server
-- 📝 Windows Event Forwarding or Sysmon under consideration
-- 🎯 Future: Connect Pi to Splunk, Wazuh, or Elastic for full SIEM lab
+- ✅ Raspberry Pi hardened and configured as a dedicated syslog server
+  - SSH keys only, password login disabled
+  - UFW firewall active with port-level controls
+  - SSH restricted to LAN devices only
+  - Fail2Ban active to prevent brute-force attacks
+- 📡 Pi forwards syslog to ELK stack on desktop for live monitoring
+- 🧱 ELK ports (5000, 9200, 5601) restricted to desktop IP only
+- ✅ Nessus Essentials scanning partially implemented
+- 📝 Windows Event Forwarding or Sysmon still under evaluation
+- 🎯 Future: Consider SIEM ingestion (Wazuh, Splunk, or Graylog)
 
 ---
 
@@ -85,5 +90,4 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 
 ## 🧠 Takeaway
 
-This lab reflects professional-grade SOHO security architecture. It combines network segmentation, host-level hardening, threat surface reduction, and responsible monitoring — all within a manageable and replicable home setup.
-
+This lab reflects professional-grade SOHO security architecture. It combines network segmentation, host-level hardening, zero-trust SSH policy, real-time monitoring, and external exposure mitigation — all within a streamlined and replicable home setup.
