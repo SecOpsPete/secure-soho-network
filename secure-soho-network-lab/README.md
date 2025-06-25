@@ -125,39 +125,85 @@ This lab documents the architecture and configuration of a secure, segmented hom
 
 ### Raspberry Pi Setup Summary
 
-1. **SSH Enabled** via blank `ssh` file on boot volume.
-2. **Static IP Set**: `192.168.50.100`
+1. **SSH Enabled** via blank `ssh` file placed on the boot volume.
+2. **Static IP Set** to `192.168.50.100`.
 3. **Installed rsyslog**:
    ```bash
    sudo apt update && sudo apt install -y rsyslog
    ```
-4. **Configured `/etc/rsyslog.conf`**:
+4. **Configured `/etc/rsyslog.conf`** to receive and forward logs:
    ```conf
    module(load="imudp")
    input(type="imudp" port="514")
 
    *.* @@192.168.50.3:5000
    ```
-   > Forwarding logs to Logstash listener on desktop (`192.168.50.3`).
+   > Forwards logs to Logstash listener on desktop (`192.168.50.3`).
 
-5. **Restarted Service**:
+5. **Restarted rsyslog service**:
    ```bash
    sudo systemctl restart rsyslog
    ```
 
 ---
 
-### Validation
+### 🔐 Hardening and Firewall Configuration
 
-| Check                              | Result                    |
-|------------------------------------|---------------------------|
-| Log received by Raspberry Pi       | ✅ Verified via `journalctl` |
-| Forwarded to ELK stack             | ✅ Seen in Kibana Discover |
-| Log Retention Functionality        | ✅ ILM 7-day delete policy |
-| Query Test in Kibana               | ✅ `@timestamp < now-7d/d` returns no results |
+| Feature                       | Status     | Details                                                                 |
+|------------------------------|------------|-------------------------------------------------------------------------|
+| SSH Key Authentication       | ✅ Enabled | Password logins disabled; login restricted to SSH key from desktop     |
+| Root Login                   | ❌ Disabled | `PermitRootLogin no` in `sshd_config`                                  |
+| UFW Firewall                 | ✅ Active   | Allows SSH from LAN, syslog on UDP 514, and Elastic ports from desktop |
+| Elastic Stack Port Filtering | ✅ Applied  | Ports 5000, 9200, 5601 restricted to `192.168.50.3`                    |
+| Fail2Ban                     | ✅ Installed & Active | Bans after 5 failed SSH attempts for 1 hour                      |
+
+UFW Rules Summary:
+```bash
+sudo ufw allow from 192.168.50.0/24 to any port 22
+sudo ufw allow 514/udp
+sudo ufw allow out on eth0
+sudo ufw allow in on lo
+sudo ufw allow from 192.168.50.3 to any port 5000
+sudo ufw allow from 192.168.50.3 to any port 9200
+sudo ufw allow from 192.168.50.3 to any port 5601
+sudo ufw enable
+```
+
+Fail2Ban Config (`/etc/fail2ban/jail.local`):
+```ini
+[sshd]
+enabled = true
+port    = ssh
+logpath = /var/log/auth.log
+maxretry = 5
+bantime = 3600
+findtime = 600
+```
+
+Fail2Ban Commands:
+```bash
+# Check status of the SSH jail
+sudo fail2ban-client status sshd
+
+# View current bans (if any)
+sudo fail2ban-client status
+```
 
 ---
 
+### ✅ Validation
+
+| Check                              | Result                          |
+|------------------------------------|---------------------------------|
+| SSH access restricted to desktop   | ✅ Confirmed                     |
+| Syslog data received by Pi         | ✅ Verified via `journalctl`     |
+| Logs forwarded to ELK stack        | ✅ Seen in Kibana Discover       |
+| Firewall blocks unauthorized ports | ✅ Confirmed with `ufw status`   |
+| Fail2Ban enforcement               | ✅ `fail2ban-client status sshd` |
+| Log Retention                      | ✅ ILM 7-day delete policy       |
+| Kibana query test                  | ✅ `@timestamp < now-7d/d` empty |
+
+---
 ### Additional Notes
 
 - Confirmed `logstash.conf` uses JSON codec for both TCP/UDP on port 5000.
@@ -202,16 +248,6 @@ logger "Test syslog message from Raspberry Pi"
 <div align="center">
   <img src="images/badass.png" alt="Home Network Diagram" width="100%">
 </div>
-
----
-
-## 🗂️ Future Enhancements
-
-- [ ] Add Pi-hole DNS filtering on Raspberry Pi
-- [ ] Integrate Grafana + Loki or ELK stack for log visualization
-- [ ] Add fail2ban to detect/restrict suspicious IPs
-- [ ] Enable alerts/log forwarding to external storage
-- [ ] Expand GitHub documentation with Raspberry Pi setup scripts
 
 ---
 
