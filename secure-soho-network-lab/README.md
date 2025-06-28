@@ -1,6 +1,6 @@
 # 🛡️ Home Network Security Lab
 
-This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
+This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router and ASUS ZenWiFi XT9 AX7800 mesh node in AP (Access Point) mode. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, centralized syslog logging via a Raspberry Pi 4, and growing layers of redundancy including UPS protection and fine-tuned wireless channel allocation.
 
 ---
 
@@ -21,6 +21,21 @@ This lab documents the architecture and configuration of a secure, segmented hom
 | 2.4GHz | SecOpsPete_Main | WPA2-Personal / AES | 20/40 MHz | Wi-Fi 6, PMF Capable, Agile Multiband |
 | 5GHz | SecOpsPete_Main | WPA2-Personal / AES | 80 MHz | Wi-Fi 6, TWT, Agile Multiband |
 | Guest (2.4GHz) | Old IoT SSID | WPA2-Personal / AES | 20 MHz | Intranet Access Disabled, Device Isolation Enabled |
+
+> The ASUS ZenWiFi XT9 AX7800 is configured as a dedicated Access Point (AP), extending Wi-Fi coverage while maintaining a unified SSID structure and inheriting all security policies from the RT-AX86U Pro core router.
+
+---
+
+### 📡 Advanced Wireless Channel Planning
+
+To optimize wireless stability and device compatibility:
+
+- **Channel 40** manually assigned to the `STARLINK SECURE_AP` 5 GHz guest network broadcast by the **XT9 in AP mode**, ensuring Roku TV compatibility with lower 5 GHz channels.
+- **Channel 161** assigned to `Sky Home Net_5G` on the **RT-AX86U Pro** to avoid co-channel interference.
+- 2.4 GHz channel fixed to **channel 11** to reduce congestion from overlapping neighboring networks.
+- Manual channel planning eliminates DFS-related issues and ensures non-interfering channel reuse between the RT-AX and XT9 AP.
+
+> Unified SSIDs with distinct manual channels on each AP improve roaming behavior and overall RF efficiency in dense environments.
 
 ---
 
@@ -44,12 +59,9 @@ This lab documents the architecture and configuration of a secure, segmented hom
 
 <br>
 
-
 <div align="center">
   <img src="images/Firewall.png" alt="Home Network Diagram" width="70%">
 </div>
-
-
 
 ---
 
@@ -71,11 +83,11 @@ This lab documents the architecture and configuration of a secure, segmented hom
 - ✅ Auto-reconnect enabled
 - ✅ “Start with WAN” enabled
 - ✅ Only selected devices routed through VPN
+
 <br>
 <div align="center">
   <img src="images/Fusion.png" alt="Home Network Diagram" width="70%">
 </div>
-
 
 ---
 
@@ -204,6 +216,7 @@ sudo fail2ban-client status
 | Kibana query test                  | ✅ `@timestamp < now-7d/d` empty |
 
 ---
+
 ### Additional Notes
 
 - Confirmed `logstash.conf` uses JSON codec for both TCP/UDP on port 5000.
@@ -238,11 +251,24 @@ logger "Test syslog message from Raspberry Pi"
 | Device | Role |
 |--------|------|
 | ASUS RT-AX86U Pro | Core router, firewall, wireless controller |
+| ASUS ZenWiFi XT9 AX7800 | Access Point extending wireless coverage |
 | Starlink Ethernet Adapter | Internet uplink (bypass mode) |
 | Raspberry Pi 4B | Syslog server, future SIEM/logging node |
+| CyberPower CP1500PFCLCD | UPS providing surge protection and battery backup |
 | Laptops / PCs | VPN-routed trusted devices |
 | IoT Devices | Segmented via guest network |
 
+---
+
+### 🔋 Power Redundancy (UPS)
+
+The entire networking stack is protected by a **CyberPower CP1500PFCLCD PFC Sinewave UPS System**:
+
+- **Capacity:** 1500VA / 1000W
+- **Outlets:** 12 total (6 battery + surge, 6 surge-only)
+- **Features:** Active PFC compatibility, LCD diagnostics, Automatic Voltage Regulation (AVR)
+
+> This UPS ensures uninterrupted power delivery to critical infrastructure including the ASUS RT-AX86U Pro, ZenWiFi XT9 AP, Raspberry Pi syslog server, and desktop running the ELK stack. It adds resilience during short-term outages and safeguards against voltage fluctuations, aligning the lab environment more closely with enterprise continuity practices.
 
 <br>
 <div align="center">
@@ -255,5 +281,3 @@ logger "Test syslog message from Raspberry Pi"
 
 **SecOpsPete**  
 [GitHub](https://github.com/SecOpsPete) | Cybersecurity Analyst in training | Network Defense | Threat Hunting | Home Lab Projects
-
-
