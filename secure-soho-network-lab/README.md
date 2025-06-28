@@ -1,6 +1,27 @@
-# 🛡️ Home Network Security Lab
+## 🛡️ Home Network Security Lab
 
-This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router and ASUS ZenWiFi XT9 AX7800 mesh node in AP (Access Point) mode. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, centralized syslog logging via a Raspberry Pi 4, and growing layers of redundancy including UPS protection and fine-tuned wireless channel allocation.
+This lab showcases the design and implementation of a resilient, secure, and segmented home network environment, engineered for hands-on cybersecurity experimentation and IT networking experience. The architecture is anchored by the ASUS RT-AX86U Pro router, complemented by an ASUS ZenWiFi XT9 AX7800 mesh node operating in Access Point (AP) mode. This dual-device configuration provides robust wireless coverage, high-throughput bandwidth, and optimized channel separation tailored for performance, compatibility, and interference reduction across a variety of devices.
+
+Key components of the network include:
+
+- **Segmented Network Topology**: Implements logical separation of trusted devices, IoT endpoints, and guest clients through SSID isolation and VLAN-like segmentation strategies, reducing lateral movement risk in the event of compromise.
+  
+- **Advanced Wireless Configuration**: Channels are manually assigned and fine-tuned across 2.4GHz and 5GHz bands to minimize congestion and interference, with specific accommodations made for device compatibility (e.g., Roku channel preference).
+
+- **VPN Fusion with NordVPN**: Enables dynamic split tunneling, allowing designated devices to route traffic through secure NordVPN connections while others use direct ISP access, balancing privacy needs with speed and functionality.
+
+- **Firewall Hardening**: The ASUS router firewall settings are manually configured to block unsolicited inbound traffic and prevent common attack vectors, supplemented by additional endpoint protections and UFW (Uncomplicated Firewall) rules on the Raspberry Pi.
+
+- **Centralized Syslog Logging**: A dedicated Raspberry Pi 4 device serves as the centralized syslog server, ingesting and parsing logs from network and system devices. It integrates with the ELK (Elasticsearch, Logstash, Kibana) stack and provides rich visibility into system activity, connection attempts, and potential anomalies.
+
+- **Power Redundancy and Protection**: The entire network infrastructure is safeguarded by a **CyberPower CP1500PFCLCD PFC Sinewave UPS System** (1500VA/1000W), which ensures uninterrupted power delivery during outages and voltage fluctuations. This system includes Automatic Voltage Regulation (AVR), protecting sensitive electronics and preserving uptime during brief brownouts or surges.
+
+- **Scalable Monitoring Capabilities**: The syslog architecture supports ongoing expansion with Filebeat for Elastic Common Schema (ECS) compliance, allowing deeper event correlation, future SIEM integrations, and enhanced alerting capabilities.
+
+- **Resiliency & Redundancy**: Multiple layers of redundancy are being built into the system, including hardware failover capabilities, segmented wireless access, independent logging pipelines, and modular, containerized services. These enhancements support long-term scalability and reliability for lab scenarios simulating enterprise-level security postures.
+
+This evolving lab reflects a practical, real-world approach to network defense-in-depth and operational resilience. It serves as a foundational platform for ongoing experiments in endpoint hardening, event logging, detection engineering, and secure remote connectivity — all within a controlled and observable home environment.
+
 
 ---
 
