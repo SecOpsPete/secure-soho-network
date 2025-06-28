@@ -80,10 +80,6 @@ To optimize wireless stability and device compatibility:
 
 <br>
 
-<div align="center">
-  <img src="images/Firewall.png" alt="Home Network Diagram" width="70%">
-</div>
-
 ---
 
 ## 🧠 AiProtection (Trend Micro)
@@ -106,10 +102,6 @@ To optimize wireless stability and device compatibility:
 - ✅ Only selected devices routed through VPN
 
 <br>
-<div align="center">
-  <img src="images/Fusion.png" alt="Home Network Diagram" width="70%">
-</div>
-
 ---
 
 ### Device Routing Table
