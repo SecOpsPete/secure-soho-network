@@ -28,7 +28,7 @@ This evolving lab reflects a practical, real-world approach to network defense-i
 ## 🌐 Network Diagram
 
 <div align="center">
-  <img src="images/NetDiagram2.png" alt="Home Network Diagram" width="65%">
+  <img src="images/NetDiagram3.png" alt="Home Network Diagram" width="65%">
 </div>
 
 ---
