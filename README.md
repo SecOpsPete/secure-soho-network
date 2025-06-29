@@ -41,7 +41,7 @@ This repository contains lab exercises focused on securing a small office/home o
 <table>
   <tr>
     <td align="center">
-      <img src="secure-soho-network-lab/images/NetDiagram.png" width="45%"><br>
+      <img src="secure-soho-network-lab/images/NetDiagram2.png" width="45%"><br>
       <sub>Secure SOHO Network</sub>
     </td>
     <td align="center">
