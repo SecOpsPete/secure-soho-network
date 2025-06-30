@@ -26,7 +26,7 @@ This repository contains lab exercises focused on securing a small office/home o
 - 🖨️ **[Secure SOHO Network Configuration Lab](secure-soho-network-lab/)**  
   This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
 
-- 🧠 **[KQL Linux Threat Queries](https://github.com/SecOpsPete/threat-hunting-scenarios/tree/main/kql-linux-threat-queries)**  
+- 🧠 **[KQL Linux Threat Queries](https://github.com/SecOpsPete/secure-soho-network/tree/main/kql-linux-threat-queries)**  
   A collection of Kibana Query Language (KQL) filters designed to detect SSH brute force attempts, failed privilege escalation, suspicious shell spawns, outbound reverse shell activity, and more. Built from syslog data ingested into the ELK stack via Raspberry Pi. Ideal for SOC analysts, home lab defenders, or anyone operating a Linux detection environment.
 
 - 🖨️ **[Printer Firewall Hardening](https://github.com/SecOpsPete/cybersecurity-tools/blob/main/printer-firewall-hardening/README.md)**  
