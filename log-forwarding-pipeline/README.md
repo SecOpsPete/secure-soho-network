@@ -1,4 +1,4 @@
-## 📡 Windows Log Forwarding Pipeline (NXLog → Syslog → Filebeat → ELK)
+### 📡 Windows Log Forwarding Pipeline (NXLog → Syslog → Filebeat → ELK)
 
 This configuration enables real-time forwarding of Windows logs from a local PC to the Raspberry Pi syslog collector using NXLog. The Pi then harvests and ships those logs to the ELK stack via Filebeat for centralized analysis in Kibana.
 
