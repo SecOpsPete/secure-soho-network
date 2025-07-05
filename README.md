@@ -26,6 +26,9 @@ This repository contains lab exercises focused on securing a small office/home o
 - 🖨️ **[Secure SOHO Network Configuration Lab](secure-soho-network-lab/)**  
   This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
 
+- 📡 **[Windows Log Forwarding to Raspberry Pi Syslog](https://github.com/SecOpsPete/home-network-security/blob/main/log-forwarding-nxlog/README.md)**  
+  Implements persistent Windows log forwarding using NXLog to a Raspberry Pi-based syslog collector. Logs are written to disk by rsyslog, harvested by Filebeat, and sent to Elasticsearch for visualization in Kibana. Includes full pipeline configuration and ECS-compatible parsing.
+
 - 🧠 **[Kibana KQL Linux Threat Queries](https://github.com/SecOpsPete/secure-soho-network/tree/main/kql-linux-threat-queries)**  
   A collection of Kibana Query Language (KQL) filters designed to detect SSH brute force attempts, failed privilege escalation, suspicious shell spawns, outbound reverse shell activity, and more. Built from syslog data ingested into the ELK stack via Raspberry Pi. Ideal for SOC analysts, home lab defenders, or anyone operating a Linux detection environment.
 
@@ -34,7 +37,6 @@ This repository contains lab exercises focused on securing a small office/home o
 
 - 🛡️ **[Secure Network Security Profile](https://github.com/SecOpsPete/secure-soho-network/blob/main/network-security-profile/README.md)**  
   Assesses and documents the security posture of a small office/home office (SOHO) network. Highlights layered defenses including VLAN segmentation, BitLocker encryption, firewall rules, router hardening, and endpoint protections. Includes architectural diagram and syslog integration via Raspberry Pi.
-
 
 > More labs coming soon (Sysmon logging, Nessus vulnerability scans, Raspberry Pi SIEM integration)
 
