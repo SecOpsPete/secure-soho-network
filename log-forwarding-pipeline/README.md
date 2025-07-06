@@ -214,4 +214,4 @@ Example fields:
 
 ---
 
-🛡️ *Part of the [Home Network Security](https://github.com/SecOpsPete/home-network-security) lab repository.*
+🛡️ *Part of the [secure-soho-network](https://github.com/SecOpsPete/secure-soho-network) lab repository.*
