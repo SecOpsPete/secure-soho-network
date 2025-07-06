@@ -1,148 +1,207 @@
-### 📡 Windows Log Forwarding Pipeline (NXLog → Syslog → Filebeat → ELK)
+### 📡 Network Log Pipeline (Windows Task & Router → Syslog → Dockerized ELK Stack)
 
-This configuration enables real-time forwarding of Windows logs from a local PC to the Raspberry Pi syslog collector using NXLog. The Pi then harvests and ships those logs to the ELK stack via Filebeat for centralized analysis in Kibana.
+This setup enables **real-time log forwarding** from two sources:
+1. A **Windows 11 PC**, which uses a scheduled PowerShell task to send critical Event Logs.
+2. An **ASUS router**, which forwards syslog messages via UDP 514.
+
+Both sources send logs to a **Raspberry Pi rsyslog server**, which stores the logs locally. The logs are then ingested and parsed by a **Dockerized ELK stack** (Logstash → Elasticsearch → Kibana) hosted on the same Windows desktop.
 
 ---
 
 ### 🔄 Log Pipeline Flow
 
 ```
-Windows 10 PC (NXLog)
-        ↓ syslog over UDP
+[Windows Task Scheduler]
+    ↓ PowerShell UDP log sender (Send-CriticalLogs.ps1)
+[ASUS Router]
+    ↓ syslog over UDP 514
 Raspberry Pi (rsyslog)
-        ↓ local log file
-Raspberry Pi (Filebeat)
-        ↓ parsed to ECS format
-Elasticsearch (Logstore)
-        ↓ visualized
-Kibana (Discover view)
+    ↓ local log file
+Windows 11 PC (Docker: Logstash)
+    ↓ parsed and indexed
+Elasticsearch (Docker container)
+    ↓ data storage + search
+Kibana (Docker container)
 ```
 
 ---
 
-### 🧰 Windows: NXLog Setup
+## 🐳 Docker-Hosted ELK Stack (Windows 11)
 
-**NXLog Version:** `nxlog-ce-3.2.2329`  
-**Install Path:** `C:\Program Files\nxlog`  
-**Service Name:** `nxlog`
+ELK runs inside Docker containers on your Windows 11 Pro desktop.
 
-📄 `C:\Program Files\nxlog\conf\nxlog.conf`
-```nxlog
-Panic Soft
-NoFreeOnExit TRUE
+📄 `docker-compose.yml`
+```yaml
+version: '3.7'
 
-define ROOT     C:\Program Files\nxlog
-define CERTDIR  %ROOT%\cert
-define CONFDIR  %ROOT%\conf\nxlog.d
-define LOGDIR   %ROOT%\data
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - elk
 
-Moduledir %ROOT%\modules
-CacheDir  %ROOT%\data
-Pidfile   %ROOT%\data\nxlog.pid
-SpoolDir  %ROOT%\data
-LogFile   %LOGDIR%\nxlog.log
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    ports:
+      - "5000:5000"
+      - "514:514/udp"
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    networks:
+      - elk
 
-<Extension syslog>
-    Module xm_syslog
-</Extension>
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - elk
 
-<Input eventlog>
-    Module im_msvistalog
-</Input>
-
-<Output out>
-    Module      om_udp
-    Host        192.168.50.3      # Raspberry Pi IP
-    Port        514
-    Exec        to_syslog_bsd();
-</Output>
-
-<Route 1>
-    Path eventlog => out
-</Route>
+networks:
+  elk:
+    driver: bridge
 ```
-
-> ✅ After saving changes, restart the NXLog service:
-> `Run as Administrator` → PowerShell:
-> ```powershell
-> Restart-Service nxlog
-> ```
 
 ---
 
-### 📥 Raspberry Pi: rsyslog Setup
+📄 `logstash.conf`
+```conf
+input {
+  tcp {
+    port => 5000
+    codec => line
+  }
+  udp {
+    port => 514
+    codec => plain { charset => "UTF-8" }
+  }
+}
 
-**Log file target:** `/var/log/remote/win10-pc.log`
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    index => "logstash-%{+YYYY.MM.dd}"
+  }
+}
+```
 
-📄 `/etc/rsyslog.d/10-windows.conf`
+---
+
+## 🪟 Windows: PowerShell-Based Log Forwarding
+
+To forward critical Windows Event Logs without NXLog or Filebeat, a scheduled task was created that runs a PowerShell script:
+
+📄 `Send-CriticalLogs.ps1`
+- Converts selected Event Logs into plain text format
+- Sends them via UDP to the Raspberry Pi's IP on port 514
+- Uses `System.Net.Sockets.UdpClient`
+
+🔧 Sample (sanitized) logic inside:
+```powershell
+$udpClient = New-Object System.Net.Sockets.UdpClient
+$serverIp = "192.168.50.2"  # Raspberry Pi IP
+$serverPort = 514
+
+Get-WinEvent -LogName System -MaxEvents 5 | ForEach-Object {
+    $message = $_.Message
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($message)
+    $udpClient.Send($bytes, $bytes.Length, $serverIp, $serverPort) | Out-Null
+}
+$udpClient.Close()
+```
+
+### 📅 Task Scheduler Setup
+- **Trigger:** At system startup or every 5 minutes
+- **Action:** Run `powershell.exe -ExecutionPolicy Bypass -File "C:\Path\To\Send-CriticalLogs.ps1"`
+- **Privileges:** Run with highest privileges
+
+---
+
+## 📥 Raspberry Pi: rsyslog Configuration
+
+📄 `/etc/rsyslog.d/10-router.conf`
 ```rsyslog
-$template WinLogFile,"/var/log/remote/win10-pc.log"
-if ($fromhost-ip == '192.168.50.15') then -?WinLogFile
+$template RouterLogFile,"/var/log/remote/router.log"
+if ($fromhost-ip == '192.168.50.1') then -?RouterLogFile
 & stop
 ```
 
-> Replace `192.168.50.15` with your Windows PC’s static IP.
+📄 `/etc/rsyslog.d/10-winlogs.conf`
+```rsyslog
+$template WinLogFile,"/var/log/remote/winlogs.log"
+if ($fromhost-ip == '192.168.50.3') then -?WinLogFile
+& stop
+```
 
-Reload rsyslog:
+Create log directories:
 ```bash
+sudo mkdir -p /var/log/remote
+sudo touch /var/log/remote/router.log
+sudo touch /var/log/remote/winlogs.log
+sudo chown syslog:adm /var/log/remote/*.log
 sudo systemctl restart rsyslog
 ```
 
 ---
 
-### 🐑 Raspberry Pi: Filebeat Setup
+## 📶 ASUS Router: Remote Syslog Settings
 
-**Log source:** `/var/log/remote/*.log`  
-**Elasticsearch target:** `http://192.168.50.3:9200`
-
-📄 `/etc/filebeat/filebeat.yml` (relevant snippet)
-```yaml
-filebeat.inputs:
-  - type: log
-    enabled: true
-    paths:
-      - /var/log/remote/*.log
-    fields:
-      lab_role: raspberrypi_syslog_collector
-      location: home_network
-      owner: peter
-
-output.elasticsearch:
-  hosts: ["http://192.168.50.3:9200"]
-```
-
-Reload Filebeat:
-```bash
-sudo systemctl restart filebeat
-```
+1. Log in to web UI → **Administration > System Log > Remote Log Server**
+2. Enable logging
+3. Set:
+   - **Remote Log Server**: `192.168.50.2` (your Pi)
+   - **Port**: `514`
 
 ---
 
-### 🧪 Kibana: Verifying Windows Logs
+## 📊 Kibana: Viewing the Logs
 
-Use the **Discover tab** with the index pattern:  
+Open:
 ```
-filebeat-*
-```
-
-📌 Search query:
-```
-win10-pc
+http://localhost:5601
 ```
 
-Sample ECS-parsed fields:
+### 🔧 Setup:
+1. Go to **Stack Management → Index Patterns**
+2. Create: `logstash-*`
+3. Select `@timestamp` as the time field
+
+### 🔍 Discover Tab Queries
+- For router logs:
+  ```
+  log.file.path: "/var/log/remote/router.log"
+  ```
+- For Windows logs:
+  ```
+  log.file.path: "/var/log/remote/winlogs.log"
+  ```
+
+Example fields:
 - `@timestamp`
-- `host.name: raspberrypi`
-- `log.file.path: /var/log/remote/win10-pc.log`
-- `message: <13>Jul 5 10:32:00 win10-pc Test message from Windows log`
+- `host.name`
+- `message`
+- `log.file.path`
+- `source.ip`, `network.mac` (if future parsing is re-enabled)
 
 ---
 
-### ✅ Status
+## ✅ Final Status Overview
 
-- [x] **Persistent forwarding** from Windows after reboot
-- [x] **Parsed logs visible in Kibana**
-- [x] **Logs tagged with `lab_role`, `owner`, and `location`**
+| Component                | Status                     |
+|--------------------------|----------------------------|
+| Raspberry Pi rsyslog     | ✅ Receiving router + Win logs |
+| Windows Scheduled Task   | ✅ Sending logs via UDP     |
+| Logstash (Docker)        | ✅ Listening on 5000 + 514   |
+| Elasticsearch (Docker)   | ✅ Accepting parsed events   |
+| Kibana (Docker)          | ✅ Visualizing logs          |
+| NXLog / Filebeat         | ❌ Deprecated / removed      |
 
 ---
 
