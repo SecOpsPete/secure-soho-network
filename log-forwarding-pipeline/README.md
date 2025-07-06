@@ -1,8 +1,10 @@
-### 📡 Network Log Pipeline (Windows Task & Router → Syslog → Dockerized ELK Stack)
+### 📡 Network Log Pipeline: Windows + Router → Raspberry Pi → Dockerized ELK Stack
 
-This setup enables **real-time log forwarding** from two sources:
-1. A **Windows 11 PC**, which uses a scheduled PowerShell task to send critical Event Logs.
-2. An **ASUS router**, which forwards syslog messages via UDP 514.
+> ⚙️ This lab demonstrates an agentless log pipeline using built-in Windows tools and rsyslog on a Raspberry Pi, with a full Elastic Stack hosted in Docker for parsing and visualization.
+
+This setup forwards logs in real time from:
+1. A **Windows 11 PC** using Task Scheduler and a PowerShell UDP sender  
+2. An **ASUS router** using standard syslog over UDP port 514
 
 Both sources send logs to a **Raspberry Pi rsyslog server**, which stores the logs locally. The logs are then ingested and parsed by a **Dockerized ELK stack** (Logstash → Elasticsearch → Kibana) hosted on the same Windows desktop.
 
@@ -12,11 +14,11 @@ Both sources send logs to a **Raspberry Pi rsyslog server**, which stores the lo
 
 ```
 [Windows Task Scheduler]
-    ↓ PowerShell UDP log sender (Send-CriticalLogs.ps1)
+    ↓ Send-CriticalLogs.ps1 (PowerShell)
 [ASUS Router]
     ↓ syslog over UDP 514
 Raspberry Pi (rsyslog)
-    ↓ local log file
+    ↓ local log file storage
 Windows 11 PC (Docker: Logstash)
     ↓ parsed and indexed
 Elasticsearch (Docker container)
@@ -69,8 +71,6 @@ networks:
     driver: bridge
 ```
 
----
-
 📄 `logstash.conf`
 ```conf
 input {
@@ -103,7 +103,7 @@ To forward critical Windows Event Logs without NXLog or Filebeat, a scheduled ta
 - Sends them via UDP to the Raspberry Pi's IP on port 514
 - Uses `System.Net.Sockets.UdpClient`
 
-🔧 Sample (sanitized) logic inside:
+🔧 Sample logic:
 ```powershell
 $udpClient = New-Object System.Net.Sockets.UdpClient
 $serverIp = "192.168.50.2"  # Raspberry Pi IP
@@ -118,9 +118,15 @@ $udpClient.Close()
 ```
 
 ### 📅 Task Scheduler Setup
-- **Trigger:** At system startup or every 5 minutes
-- **Action:** Run `powershell.exe -ExecutionPolicy Bypass -File "C:\Path\To\Send-CriticalLogs.ps1"`
-- **Privileges:** Run with highest privileges
+
+- **Trigger:** At startup or every 5 minutes  
+- **Action:**
+  ```
+  powershell.exe -ExecutionPolicy Bypass -File "C:\Path\To\Send-CriticalLogs.ps1"
+  ```
+- **Settings:**
+  - Run with highest privileges  
+  - Configure for Windows 10/11
 
 ---
 
@@ -173,12 +179,15 @@ http://localhost:5601
 2. Create: `logstash-*`
 3. Select `@timestamp` as the time field
 
-### 🔍 Discover Tab Queries
-- For router logs:
+### 🔍 Quick Log Search Tip
+Use the **Discover** tab and set the time range to "Last 15 minutes" after generating new logs.
+
+Example queries:
+- Router logs:
   ```
   log.file.path: "/var/log/remote/router.log"
   ```
-- For Windows logs:
+- Windows logs:
   ```
   log.file.path: "/var/log/remote/winlogs.log"
   ```
@@ -194,14 +203,14 @@ Example fields:
 
 ## ✅ Final Status Overview
 
-| Component                | Status                     |
-|--------------------------|----------------------------|
+| Component                | Status                         |
+|--------------------------|--------------------------------|
 | Raspberry Pi rsyslog     | ✅ Receiving router + Win logs |
-| Windows Scheduled Task   | ✅ Sending logs via UDP     |
-| Logstash (Docker)        | ✅ Listening on 5000 + 514   |
-| Elasticsearch (Docker)   | ✅ Accepting parsed events   |
-| Kibana (Docker)          | ✅ Visualizing logs          |
-| NXLog / Filebeat         | ❌ Deprecated / removed      |
+| Windows Scheduled Task   | ✅ Sending logs via UDP         |
+| Logstash (Docker)        | ✅ Listening on 5000 + 514      |
+| Elasticsearch (Docker)   | ✅ Accepting parsed events       |
+| Kibana (Docker)          | ✅ Visualizing logs              |
+| NXLog / Filebeat         | ❌ Deprecated / removed          |
 
 ---
 
