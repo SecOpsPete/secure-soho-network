@@ -201,6 +201,98 @@ Example fields:
 
 ---
 
+## 🗃️ Elasticsearch: 30-Day Log Retention via ILM
+
+To prevent disk overuse and ensure long-term visibility without manual cleanup, a **30-day Index Lifecycle Management (ILM) policy** is applied to all `logstash-*` indices in Elasticsearch.
+
+###  ILM Policy: `log-retention-30d`
+
+```json
+PUT _ilm/policy/log-retention-30d
+{
+  "policy": {
+    "phases": {
+      "hot": {
+        "actions": {}
+      },
+      "delete": {
+        "min_age": "30d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}
+```
+
+This policy retains each daily index for **30 days**, then automatically deletes it. There are no rollover, warm, or snapshot actions — ideal for a lightweight home lab.
+
+###  Index Template: `logstash-template`
+
+The policy is auto-applied to all new `logstash-*` indices via this template:
+
+```json
+PUT _index_template/logstash-template
+{
+  "index_patterns": ["logstash-*"],
+  "template": {
+    "settings": {
+      "index": {
+        "lifecycle": {
+          "name": "log-retention-30d"
+        },
+        "number_of_shards": 1,
+        "number_of_replicas": 0
+      }
+    }
+  },
+  "priority": 10,
+  "_meta": {
+    "description": "Applies 30-day ILM policy to logstash indices"
+  }
+}
+```
+
+###  Retroactive Policy Attachment
+
+Older `logstash-*` indices created before this template were manually updated using:
+
+```json
+PUT logstash-2025.07.06/_settings
+{
+  "index": {
+    "lifecycle": {
+      "name": "log-retention-30d"
+    }
+  }
+}
+```
+
+(Repeated for each existing index.)
+
+###  Verified Status
+
+Check the policy application with:
+
+```json
+GET logstash-2025.07.06/_ilm/explain
+```
+
+Expected output:
+
+```json
+"policy": "log-retention-30d",
+"managed": true,
+"phase": "hot",
+"step": "complete"
+```
+
+---
+
+This retention approach ensures that logs remain available for up to a month for analysis, threat hunting, or audit purposes — while automatically clearing space after expiration.
+
+
 ## ✅ Final Status Overview
 
 | Component                | Status                         |
