@@ -268,19 +268,6 @@ logger "Test syslog message from Raspberry Pi"
 
 ---
 
-## 🧪 Validation
-
-| Test | Result |
-|------|--------|
-| HTTPS login enforced | ✅ https://192.168.50.1:8443 |
-| IP Test (PC) | ✅ Shows NordVPN IP (`45.132.159.12`) |
-| IP Test (iPhone) | ✅ Shows Starlink IP |
-| Guest Network Isolation | ✅ IoT devices can’t reach LAN |
-| AiProtection Scan | ✅ All green |
-| Syslog Entries Received | ✅ Confirmed from ASUS to Pi |
-
----
-
 ## 📦 Hardware Summary
 
 | Device | Role |
