@@ -104,12 +104,19 @@ To optimize wireless stability and device compatibility:
 
 ## 🧠 AiProtection (Trend Micro)
 
-| Module | Status |
-|--------|--------|
-| Malicious Site Blocking | ✅ Enabled |
-| Two-Way IPS | ✅ Enabled |
-| Infected Device Quarantine | ✅ Enabled |
-| Router Security Scan | ✅ All green ✅ |
+AiProtection is a built-in security suite powered by **Trend Micro**, integrated directly into the ASUS RT-AX86U Pro router. It provides proactive, router-level threat prevention for all devices on the network — especially useful for IoT and guest clients that may lack built-in defenses.
+
+Unlike endpoint antivirus, AiProtection inspects traffic at the perimeter, offering continuous monitoring and automatic blocking of known threats.
+
+| Module                    | Status      | Description                                                                 |
+|---------------------------|-------------|-----------------------------------------------------------------------------|
+| **Malicious Site Blocking**    | ✅ Enabled   | Prevents access to known phishing domains and malicious URLs.               |
+| **Two-Way IPS**                | ✅ Enabled   | Detects and blocks suspicious inbound and outbound traffic.                 |
+| **Infected Device Quarantine**| ✅ Enabled   | Automatically isolates compromised devices to prevent lateral movement.     |
+| **Router Security Scan**       | ✅ All green ✅ | Periodic scans confirm strong security posture and no risky configurations. |
+
+> AiProtection provides an added layer of baseline security, complementing the network's segmented topology, firewall rules, and centralized log monitoring. While it doesn't replace host-based security tools, it strengthens the first line of defense at the network edge.
+
 
 ---
 
@@ -124,16 +131,23 @@ To optimize wireless stability and device compatibility:
 <br>
 ---
 
+## 🔄 VPN Fusion – Split Tunneling
+
+The ASUS RT-AX86U Pro supports **VPN Fusion**, which allows selected devices to use a VPN connection while others access the internet directly via the ISP (Starlink). This setup balances **privacy, speed, and functionality** based on each device's role.
+
 ### Device Routing Table
 
-| Device | Route |
-|--------|--------|
-| 🧠 Desktop / Laptop | 🔐 NordVPN |
-| 📱 iPhone | 🌐 Starlink WAN |
-| 📺 Smart TV | 🌐 Starlink WAN |
-| 🔌 IoT Devices (e.g. plugs, switches) | 🌐 Starlink WAN |
-| 🖨️ Printer | 🌐 Starlink WAN |
-| 🐧 Raspberry Pi (Syslog Server) | 🌐 Starlink WAN |
+| Device                                | Route            |
+|----------------------------------------|------------------|
+| 🧠 Desktop / Laptop                    | 🔐 NordVPN       |
+| 📱 iPhone                              | 🌐 Starlink WAN  |
+| 📺 Smart TV                            | 🌐 Starlink WAN  |
+| 🔌 IoT Devices (e.g. plugs, switches)  | 🌐 Starlink WAN  |
+| 🖨️ Printer                             | 🌐 Starlink WAN  |
+| 🐧 Raspberry Pi (Syslog Server)        | 🌐 Starlink WAN  |
+
+> Devices with privacy or security requirements (like your main desktop) are routed through NordVPN, while bandwidth-sensitive or low-risk devices (like IoT, printers, and media streamers) use the direct Starlink connection.
+
 
 ---
 
