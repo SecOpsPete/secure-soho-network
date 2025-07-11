@@ -1,27 +1,18 @@
 ## 🛡️ Home Network Security Lab
 
-This lab showcases the design and implementation of a resilient, secure, and segmented home network environment, engineered for hands-on cybersecurity experimentation and IT networking experience. The architecture is anchored by the ASUS RT-AX86U Pro router, complemented by an ASUS ZenWiFi XT9 AX7800 mesh node operating in Access Point (AP) mode. This dual-device configuration provides robust wireless coverage, high-throughput bandwidth, and optimized channel separation tailored for performance, compatibility, and interference reduction across a variety of devices.
+This project documents a resilient and secure home network built for hands-on cybersecurity experimentation. It’s anchored by an **ASUS RT-AX86U Pro** router and an **ASUS ZenWiFi XT9** mesh node in Access Point (AP) mode, delivering high-performance coverage and stability.
 
-Key components of the network include:
+Key features include:
 
-- **Segmented Network Topology**: Implements logical separation of trusted devices, IoT endpoints, and guest clients through SSID isolation and VLAN-like segmentation strategies, reducing lateral movement risk in the event of compromise.
-  
-- **Advanced Wireless Configuration**: Channels are manually assigned and fine-tuned across 2.4GHz and 5GHz bands to minimize congestion and interference, with specific accommodations made for device compatibility (e.g., Roku channel preference).
+- **Network Segmentation**: Trusted, IoT, and guest devices are isolated via SSIDs and VLAN-like logic to reduce lateral movement risk.
+- **Manual Channel Optimization**: Wireless channels are strategically assigned for performance and device compatibility.
+- **VPN Fusion**: Select devices route traffic through NordVPN while others use direct ISP access.
+- **Firewall Hardening**: Unsolicited traffic is blocked at the router and endpoint level using UFW and secure defaults.
+- **Centralized Logging**: A Raspberry Pi syslog server forwards logs to a Dockerized ELK stack for real-time visibility.
+- **Power Protection**: A CyberPower UPS provides battery backup and voltage regulation for critical devices.
+- **Scalability**: Modular logging, ECS compliance, and containerized services allow future SIEM integration and enterprise-grade monitoring.
 
-- **VPN Fusion with NordVPN**: Enables dynamic split tunneling, allowing designated devices to route traffic through secure NordVPN connections while others use direct ISP access, balancing privacy needs with speed and functionality.
-
-- **Firewall Hardening**: The ASUS router firewall settings are manually configured to block unsolicited inbound traffic and prevent common attack vectors, supplemented by additional endpoint protections and UFW (Uncomplicated Firewall) rules on the Raspberry Pi.
-
-- **Centralized Syslog Logging**: A dedicated Raspberry Pi 4 device serves as the centralized syslog server, ingesting and parsing logs from network and system devices. It integrates with the ELK (Elasticsearch, Logstash, Kibana) stack and provides rich visibility into system activity, connection attempts, and potential anomalies.
-
-- **Power Redundancy and Protection**: The entire network infrastructure is safeguarded by a **CyberPower CP1500PFCLCD PFC Sinewave UPS System** (1500VA/1000W), which ensures uninterrupted power delivery during outages and voltage fluctuations. This system includes Automatic Voltage Regulation (AVR), protecting sensitive electronics and preserving uptime during brief brownouts or surges.
-
-- **Scalable Monitoring Capabilities**: The syslog architecture supports ongoing expansion with Filebeat for Elastic Common Schema (ECS) compliance, allowing deeper event correlation, future SIEM integrations, and enhanced alerting capabilities.
-
-- **Resiliency & Redundancy**: Multiple layers of redundancy are being built into the system, including hardware failover capabilities, segmented wireless access, independent logging pipelines, and modular, containerized services. These enhancements support long-term scalability and reliability for lab scenarios simulating enterprise-level security postures.
-
-This evolving lab reflects a practical, real-world approach to network defense-in-depth and operational resilience. It serves as a foundational platform for ongoing experiments in endpoint hardening, event logging, detection engineering, and secure remote connectivity — all within a controlled and observable home environment.
-
+This evolving lab serves as a realistic platform for testing endpoint defense, log analysis, and secure networking—all within a controlled home environment.
 
 ---
 
@@ -44,6 +35,35 @@ This evolving lab reflects a practical, real-world approach to network defense-i
 | Guest (2.4GHz) | Old IoT SSID | WPA2-Personal / AES | 20 MHz | Intranet Access Disabled, Device Isolation Enabled |
 
 > The ASUS ZenWiFi XT9 AX7800 is configured as a dedicated Access Point (AP), extending Wi-Fi coverage while maintaining a unified SSID structure and inheriting all security policies from the RT-AX86U Pro core router.
+
+---
+
+## 📌 Static IP Addressing Strategy
+
+To maintain consistency, reduce DHCP churn, and simplify device identification in log files and firewall rules, key infrastructure devices are assigned **static IP addresses** through the router’s DHCP reservation table.
+
+### 🎯 Why Static IPs?
+
+Static IP assignments serve several important functions in a secure and segmented home lab:
+
+- **Reliability**: Devices like the syslog server (Raspberry Pi) or VPN-routed desktops maintain the same address, ensuring uninterrupted forwarding, monitoring, and access.
+- **Log Integrity**: Centralized logging systems benefit from stable IPs, making it easier to trace events and correlate activity in Kibana dashboards.
+- **Firewall Control**: Granular UFW and router-level firewall rules depend on consistent IPs to restrict access (e.g., only allow Logstash ports from `192.168.50.3`).
+- **DNS and Hostname Mapping**: Enables optional hostname assignments for clarity across logs and tools.
+- **Reduced Conflict**: Prevents accidental DHCP assignment overlap or reassignment that could break scripts, SSH tunnels, or static routes.
+
+### 🧭 Static IP Map
+
+| Device         | MAC Address          | Static IP         | Hostname       |
+|----------------|----------------------|--------------------|----------------|
+| Peters_Desktop | `D8:43:AE:XX:XX:XX`   | `192.168.50.3`     | —              |
+| HP Office Jet  | `80:E8:2C:XX:XX:XX`   | `192.168.50.38`    | —              |
+| Raspberry Pi   | `2C:67:6B:XX:XX:XX`   | `192.168.50.100`   | `Raspberry_Pi` |
+| PVR_Notebook   | `8C:F8:C5:XX:XX:XX`   | `192.168.50.117`   | —              |
+
+> These IPs are reserved directly in the **ASUS RT-AX86U Pro** router’s DHCP static assignment table to ensure consistency across reboots and firmware updates.
+
+This strategy supports a more **deterministic, auditable, and manageable** home lab environment — particularly important for maintaining service availability and accurate logging in a network defense context.
 
 ---
 
