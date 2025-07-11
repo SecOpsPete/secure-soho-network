@@ -238,17 +238,20 @@ sudo fail2ban-client status
 
 ---
 
-### ✅ Validation
+## ✅ Validation
 
-| Check                              | Result                          |
-|------------------------------------|---------------------------------|
-| SSH access restricted to desktop   | ✅ Confirmed                     |
-| Syslog data received by Pi         | ✅ Verified via `journalctl`     |
-| Logs forwarded to ELK stack        | ✅ Seen in Kibana Discover       |
-| Firewall blocks unauthorized ports | ✅ Confirmed with `ufw status`   |
-| Fail2Ban enforcement               | ✅ `fail2ban-client status sshd` |
-| Log Retention                      | ✅ ILM 7-day delete policy       |
-| Kibana query test                  | ✅ `@timestamp < now-7d/d` empty |
+| Check                                  | Result                          |
+|----------------------------------------|---------------------------------|
+| SSH key-based access from desktop      | ✅ Enabled and tested            |
+| SSH access restricted to desktop       | ✅ Confirmed                     |
+| Syslog data received by Pi             | ✅ Verified via `journalctl`     |
+| Logs forwarded to ELK stack            | ✅ Seen in Kibana Discover       |
+| Firewall blocks unauthorized ports     | ✅ Confirmed with `ufw status`   |
+| Fail2Ban enforcement                   | ✅ `fail2ban-client status sshd` |
+| Log Retention                          | ✅ ILM 7-day delete policy       |
+| Kibana query test                      | ✅ `@timestamp < now-7d/d` empty |
+
+> The Raspberry Pi accepts SSH connections only from the desktop, authenticated via public/private key pair. Password-based logins and remote root access are disabled for security.
 
 ---
 
