@@ -155,6 +155,15 @@ sudo chown syslog:adm /var/log/remote/*.log
 sudo systemctl restart rsyslog
 ```
 
+🧠 Why This Matters
+
+This configuration:
+
+- Organizes logs by source **before** they enter the ELK pipeline  
+- Simplifies parsing in Logstash (I already know what device sent which file)  
+- Makes debugging and validation much easier  
+- Helps with compliance and retention policies by splitting log sources cleanly  
+
 ---
 
 ## 📶 ASUS Router: Remote Syslog Settings
