@@ -117,18 +117,6 @@ Unlike endpoint antivirus, AiProtection inspects traffic at the perimeter, offer
 
 > AiProtection provides an added layer of baseline security, complementing the network's segmented topology, firewall rules, and centralized log monitoring. While it doesn't replace host-based security tools, it strengthens the first line of defense at the network edge.
 
-
----
-
-## 🔄 VPN Fusion – Split Tunneling
-
-### NordVPN Integration
-- ✅ OpenVPN client profile uploaded
-- ✅ Auto-reconnect enabled
-- ✅ “Start with WAN” enabled
-- ✅ Only selected devices routed through VPN
-
-<br>
 ---
 
 ## 🔄 VPN Fusion – Split Tunneling
