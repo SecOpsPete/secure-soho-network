@@ -71,23 +71,71 @@ networks:
     driver: bridge
 ```
 
+---
+
+## 📄 Logstash Parsing Pipeline (Updated `logstash.conf`)
+
+This configuration parses incoming syslog traffic and extracts structured fields for search and analysis in Kibana. It enhances visibility into network-level activity, especially from the ASUS router (e.g., DHCP assignments from `dnsmasq`).
+
 📄 `logstash.conf`
 ```conf
 input {
-  tcp {
-    port => 5000
-    codec => line
-  }
   udp {
     port => 514
-    codec => plain { charset => "UTF-8" }
+    host => "0.0.0.0"
+    type => "syslog"
+  }
+}
+
+filter {
+  if [type] == "syslog" {
+    grok {
+      match => {
+        "message" => [
+          "<%{NUMBER:syslog.priority}>%{SYSLOGTIMESTAMP:syslog.timestamp} %{HOSTNAME:syslog.hostname} %{DATA:syslog.program}(?:\\[%{POSINT:syslog.pid}\\])?: %{GREEDYDATA:syslog.msg}"
+        ]
+      }
+    }
+
+    date {
+      match => ["syslog.timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss"]
+      target => "@timestamp"
+    }
+
+    if "_grokparsefailure" not in [tags] {
+      mutate {
+        rename => { "syslog.hostname" => "host.name" }
+        rename => { "syslog.program"  => "process.name" }
+        rename => { "syslog.pid"      => "process.pid" }
+        rename => { "syslog.msg"      => "message" }
+      }
+    }
+
+    if [process.name] == "dnsmasq-dhcp" {
+      grok {
+        match => {
+          "message" => [
+            "%{WORD:dhcp_type}\\(%{WORD:dhcp.interface}\\) %{IP:source.ip} %{MAC:network.mac} %{GREEDYDATA:host.hostname}",
+            "%{WORD:dhcp_type}\\(%{WORD:dhcp.interface}\\) %{IP:source.ip} %{MAC:network.mac}",
+            "%{WORD:dhcp_type}\\(%{WORD:dhcp.interface}\\) %{MAC:network.mac}"
+          ]
+        }
+      }
+    }
+
+    if "_grokparsefailure" in [tags] {
+      mutate {
+        remove_field => [ "message" ]
+        add_tag => ["unparsed_syslog"]
+      }
+    }
   }
 }
 
 output {
   elasticsearch {
     hosts => ["http://elasticsearch:9200"]
-    index => "logstash-%{+YYYY.MM.dd}"
+    index => "logstash-syslog-%{+YYYY.MM.dd}"
   }
 }
 ```
@@ -206,7 +254,7 @@ Example fields:
 - `host.name`
 - `message`
 - `log.file.path`
-- `source.ip`, `network.mac` (if future parsing is re-enabled)
+- `source.ip`, `network.mac` (if present in DHCP logs)
 
 ---
 
@@ -235,11 +283,7 @@ PUT _ilm/policy/log-retention-30d
 }
 ```
 
-This policy retains each daily index for **30 days**, then automatically deletes it. There are no rollover, warm, or snapshot actions — ideal for a lightweight home lab.
-
 ###  Index Template: `logstash-template`
-
-The policy is auto-applied to all new `logstash-*` indices via this template:
 
 ```json
 PUT _index_template/logstash-template
@@ -265,8 +309,6 @@ PUT _index_template/logstash-template
 
 ###  Retroactive Policy Attachment
 
-Older `logstash-*` indices created before this template were manually updated using:
-
 ```json
 PUT logstash-2025.07.06/_settings
 {
@@ -278,18 +320,13 @@ PUT logstash-2025.07.06/_settings
 }
 ```
 
-(Repeated for each existing index.)
-
 ###  Verified Status
-
-Check the policy application with:
 
 ```json
 GET logstash-2025.07.06/_ilm/explain
 ```
 
 Expected output:
-
 ```json
 "policy": "log-retention-30d",
 "managed": true,
@@ -298,9 +335,6 @@ Expected output:
 ```
 
 ---
-
-This retention approach ensures that logs remain available for up to a month for analysis, threat hunting, or audit purposes — while automatically clearing space after expiration.
-
 
 ## ✅ Final Status Overview
 
