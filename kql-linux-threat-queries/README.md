@@ -1,4 +1,4 @@
-# 🔍 SSH & Linux Intrusion Detection with KQL
+# 🔍 # 📊 Practical KQL Queries for Detecting SSH & Linux Intrusions
 
 This project leverages Kibana Query Language (KQL) to identify suspicious SSH and Linux activity within ELK (Elasticsearch, Logstash, Kibana) environments. These queries are intended to assist blue teams, home lab defenders, and SOC analysts in proactively detecting early-stage intrusion behavior, privilege escalation attempts, and command-line abuse on Linux systems.
 
