@@ -29,7 +29,7 @@ This repository contains lab exercises focused on securing a small office/home o
 - 🖥️ **[Windows-to-Raspberry Pi Syslog Pipeline](https://github.com/SecOpsPete/secure-soho-network/tree/main/log-forwarding-pipeline)**  
 Forwards Windows logs to a Raspberry Pi syslog server using Task Scheduler and PowerShell. Logs are parsed and visualized via a Docker-hosted Elastic Stack on the desktop—no NXLog or Filebeat required.
 
-- 🧠 **[Kibana KQL Linux Threat Queries](https://github.com/SecOpsPete/secure-soho-network/tree/main/kql-linux-threat-queries)**  
+- 🧠 **[Practical KQL Queries for Detecting SSH & Linux Intrusions](https://github.com/SecOpsPete/secure-soho-network/tree/main/kql-linux-threat-queries)**  
   A collection of Kibana Query Language (KQL) filters designed to detect SSH brute force attempts, failed privilege escalation, suspicious shell spawns, outbound reverse shell activity, and more. Built from syslog data ingested into the ELK stack via Raspberry Pi. Ideal for SOC analysts, home lab defenders, or anyone operating a Linux detection environment.
 
 - 🖨️ **[Printer Firewall Hardening](https://github.com/SecOpsPete/cybersecurity-tools/blob/main/printer-firewall-hardening/README.md)**  
