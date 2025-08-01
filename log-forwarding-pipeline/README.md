@@ -2,6 +2,11 @@
 
 > ⚙️ This lab demonstrates an agentless log pipeline using built-in Windows tools and rsyslog on a Raspberry Pi, with a full Elastic Stack hosted in Docker for parsing and visualization.
 
+<div align="center">
+  <img src="images/Lab1.png" alt="Home Network Diagram" width="50%">
+</div>
+
+<br>
 This setup forwards logs in real time from:
 1. A **Windows 11 PC** using Task Scheduler and a PowerShell UDP sender  
 2. An **ASUS router** using standard syslog over UDP port 514
@@ -73,7 +78,7 @@ networks:
 
 ---
 
-## 📄 Logstash Parsing Pipeline (Updated `logstash.conf`)
+## 📄 Logstash Parsing Pipeline (`logstash.conf`)
 
 This configuration parses incoming syslog traffic and extracts structured fields for search and analysis in Kibana. It enhances visibility into network-level activity, especially from the ASUS router (e.g., DHCP assignments from `dnsmasq`).
 
@@ -239,22 +244,9 @@ http://localhost:5601
 ### 🔍 Quick Log Search Tip
 Use the **Discover** tab and set the time range to "Last 15 minutes" after generating new logs.
 
-Example queries:
-- Router logs:
-  ```
-  log.file.path: "/var/log/remote/router.log"
-  ```
-- Windows logs:
-  ```
-  log.file.path: "/var/log/remote/winlogs.log"
-  ```
-
-Example fields:
-- `@timestamp`
-- `host.name`
-- `message`
-- `log.file.path`
-- `source.ip`, `network.mac` (if present in DHCP logs)
+<div align="center">
+  <img src="images/CleanLogs.png" alt="Home Network Diagram" width="100%">
+</div>
 
 ---
 
