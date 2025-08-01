@@ -337,7 +337,6 @@ Expected output:
 | Logstash (Docker)        | ✅ Listening on 5000 + 514      |
 | Elasticsearch (Docker)   | ✅ Accepting parsed events       |
 | Kibana (Docker)          | ✅ Visualizing logs              |
-| NXLog / Filebeat         | ❌ Deprecated / removed          |
 
 ---
 
