@@ -1,4 +1,4 @@
-## 🛡️ Home Network Security Lab
+# 🛡️ Home Network Security Lab
 
 This project documents a resilient and secure home network built for hands-on cybersecurity experimentation. It’s anchored by an **ASUS RT-AX86U Pro** router and an **ASUS ZenWiFi XT9** mesh node in Access Point (AP) mode, delivering high-performance coverage and stability.
 
