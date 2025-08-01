@@ -1,4 +1,4 @@
-### 📡 Network Log Pipeline: Windows + Router → Raspberry Pi → Dockerized ELK Stack
+# 📡 Network Log Pipeline: Windows + Router → Raspberry Pi → Dockerized ELK Stack
 
 > ⚙️ This lab demonstrates an agentless log pipeline using built-in Windows tools and rsyslog on a Raspberry Pi, with a full Elastic Stack hosted in Docker for parsing and visualization.
 
