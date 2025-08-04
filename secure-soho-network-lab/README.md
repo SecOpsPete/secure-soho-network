@@ -88,12 +88,10 @@ This strategy supports a more **deterministic, auditable, and manageable** home 
 
 To optimize wireless stability and device compatibility:
 
-- **Channel 40** manually assigned to the `STARLINK SECURE_AP` 5 GHz guest network broadcast by the **XT9 in AP mode**, ensuring Roku TV compatibility with lower 5 GHz channels.
-- **Channel 161** assigned to `Sky Home Net_5G` on the **RT-AX86U Pro** to avoid co-channel interference.
+- **Channel 40** manually assigned to the 5 GHz guest network ensuring Roku TV compatibility with lower 5 GHz channels.
+- **Channel 161** assigned to secure 5 GHz to avoid co-channel interference.
 - 2.4 GHz channel fixed to **channel 11** to reduce congestion from overlapping neighboring networks.
-- Manual channel planning eliminates DFS-related issues and ensures non-interfering channel reuse between the RT-AX and XT9 AP.
-
-> Unified SSIDs with distinct manual channels on each AP improve roaming behavior and overall RF efficiency in dense environments.
+- Manual channel planning eliminates DFS-related issues and ensures non-interfering channel reuse. 
 
 ---
 
