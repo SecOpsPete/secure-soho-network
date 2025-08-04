@@ -245,7 +245,7 @@ http://localhost:5601
 Use the **Discover** tab and set the time range to "Last 15 minutes" after generating new logs.
 
 <div align="center">
-  <img src="images/CleanLogs.png" alt="Home Network Diagram" width="100%">
+  <img src="images/ParsedLogs.png" alt="Home Network Diagram" width="100%">
 </div>
 
 ---
