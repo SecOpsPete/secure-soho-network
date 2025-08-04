@@ -1,4 +1,4 @@
-# 🏠 Secure SOHO Network Labs
+# 🏠 🛡️ Secure Network for Cybersecurity & Network Defense Labs
 
 This repository contains lab exercises focused on securing a small office/home office (SOHO) environment through network segmentation, firewall hardening, device isolation, logging, and threat detection.
 
