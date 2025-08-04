@@ -2,6 +2,10 @@
 
 This lab simulates a production-grade network environment within a home setting, designed for cybersecurity experimentation, monitoring, and resilience testing. It incorporates enterprise-style features such as VLAN segmentation, centralized logging via ELK, dual-ISP failover with Speedify, VPN split tunneling, and endpoint hardening. With layered defenses, proactive visibility, and purpose-built redundancy, this environment enables hands-on testing of SIEM pipelines, threat detection, and secure architecture principles in a controlled and realistic setting.
 
+<div align="center">
+  <img src="images/HomeNetworkLab.png" alt="Home Network Diagram" width="85%">
+</div>
+
 Key features include:
 
 - **Network Segmentation: Trusted, IoT, guest, and mobile devices are isolated to reduce lateral movement risk.
@@ -20,7 +24,7 @@ This evolving lab serves as a realistic platform for testing endpoint defense, l
 ## 🌐 Network Diagram
 
 <div align="center">
-  <img src="images/HomeNetworkLab.png" alt="Home Network Diagram" width="75%">
+  <img src="images/Network1.png" alt="Home Network Diagram" width="85%">
 </div>
 
 ---
@@ -311,11 +315,6 @@ The entire networking stack is protected by a **CyberPower CP1500PFCLCD PFC Sine
 - **Features:** Active PFC compatibility, LCD diagnostics, Automatic Voltage Regulation (AVR)
 
 > This UPS ensures uninterrupted power delivery to critical infrastructure including the ASUS RT-AX86U Pro, ZenWiFi XT9 AP, Raspberry Pi syslog server, and desktop running the ELK stack. It adds resilience during short-term outages and safeguards against voltage fluctuations, aligning the lab environment more closely with enterprise continuity practices.
-
-<br>
-<div align="center">
-  <img src="images/badass.png" alt="Home Network Diagram" width="100%">
-</div>
 
 ---
 
