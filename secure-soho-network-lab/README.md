@@ -1,16 +1,17 @@
-# 🛡️ Home Network Security Lab
+# 🛡️ Secure Home Lab for Cybersecurity & Network Defense
 
-This project documents a resilient and secure home network built for hands-on cybersecurity experimentation. It’s anchored by an **ASUS RT-AX86U Pro** router and an **ASUS ZenWiFi XT9** mesh node in Access Point (AP) mode, delivering high-performance coverage and stability.
+This lab simulates a production-grade network environment within a home setting, designed for cybersecurity experimentation, monitoring, and resilience testing. It incorporates enterprise-style features such as VLAN segmentation, centralized logging via ELK, dual-ISP failover with Speedify, VPN split tunneling, and endpoint hardening. With layered defenses, proactive visibility, and purpose-built redundancy, this environment enables hands-on testing of SIEM pipelines, threat detection, and secure architecture principles in a controlled and realistic setting.
 
 Key features include:
 
-- **Network Segmentation**: Trusted, IoT, and guest devices are isolated via SSIDs and VLAN-like logic to reduce lateral movement risk.
-- **Manual Channel Optimization**: Wireless channels are strategically assigned for performance and device compatibility.
-- **VPN Fusion**: Select devices route traffic through NordVPN while others use direct ISP access.
-- **Firewall Hardening**: Unsolicited traffic is blocked at the router and endpoint level using UFW and secure defaults.
-- **Centralized Logging**: A Raspberry Pi syslog server forwards logs to a Dockerized ELK stack for real-time visibility.
-- **Power Protection**: A CyberPower UPS provides battery backup and voltage regulation for critical devices.
-- **Scalability**: Modular logging, ECS compliance, and containerized services allow future SIEM integration and enterprise-grade monitoring.
+- **Network Segmentation: Trusted, IoT, guest, and mobile devices are isolated to reduce lateral movement risk.
+- **ISP Redundancy: Dedicated cellular phone data bonded via Speedify acts as a secondary ISP link.
+- **Manual Channel Optimization: Wireless channels are strategically assigned for performance and device compatibility.
+- **VPN Fusion: Select devices route traffic through NordVPN while others use direct ISP or cellular access.
+- **Firewall Hardening: Unsolicited traffic is blocked at the router and endpoint level using UFW and secure defaults.
+- **Centralized Logging: A Raspberry Pi syslog server forwards logs to a Dockerized ELK stack for real-time visibility.
+- **Power Protection: A CyberPower UPS provides battery backup and voltage regulation for critical devices.
+- **Scalability: Modular logging, ECS compliance, and containerized services allow future SIEM integration and enterprise-grade monitoring.
 
 This evolving lab serves as a realistic platform for testing endpoint defense, log analysis, and secure networking—all within a controlled home environment.
 
@@ -37,6 +38,22 @@ This evolving lab serves as a realistic platform for testing endpoint defense, l
 > The ASUS ZenWiFi XT9 AX7800 is configured as a dedicated Access Point (AP), extending Wi-Fi coverage while maintaining a unified SSID structure and inheriting all security policies from the RT-AX86U Pro core router.
 
 ---
+
+
+### 📡 ISP Redundancy and Bypass Configuration
+
+| Component               | Role                                                    |
+|------------------------|---------------------------------------------------------|
+| **Starlink Ethernet Adapter** | Primary uplink via Starlink satellite — Bypass Mode ✅  |
+| **Smartphone (5G)**    | Dedicated cellular uplink for ISP failover              |
+| **Speedify App**       | Channel-bonds cellular + Starlink for seamless failover |
+| **Wi-Fi Repeater**     | Bridges phone connection into the local network         |
+| **USB Hub**            | Bus-powered hub ensures stable power to repeater & phone|
+
+> **Bypass Mode:** The Starlink router is placed in bypass mode using the official **Ethernet Adapter**, allowing the RT-AX86U Pro to act as the sole DHCP/NAT/firewall authority. Cellular traffic is managed by Speedify for redundancy.
+
+---
+
 
 ## 📌 Static IP Addressing Strategy
 
@@ -273,15 +290,17 @@ logger "Test syslog message from Raspberry Pi"
 
 ## 📦 Hardware Summary
 
-| Device | Role |
-|--------|------|
-| ASUS RT-AX86U Pro | Core router, firewall, wireless controller |
-| ASUS ZenWiFi XT9 AX7800 | Access Point extending wireless coverage |
-| Starlink Ethernet Adapter | Internet uplink (bypass mode) |
-| Raspberry Pi 4B | Syslog server, future SIEM/logging node |
-| CyberPower CP1500PFCLCD | UPS providing surge protection and battery backup |
-| Laptops / PCs | VPN-routed trusted devices |
-| IoT Devices | Segmented via guest network |
+| Device                 | Role                                             |
+|------------------------|--------------------------------------------------|
+| ASUS RT-AX86U Pro      | Core router, firewall, wireless controller       |
+| ASUS RT-AX55           | AiMesh node w/ segmented VLAN SSIDs             |
+| Starlink Ethernet Adapter | Primary uplink (Bypass Mode)                |
+| Smartphone (5G)        | Cellular failover ISP node                      |
+| Wi-Fi Repeater         | Bridges smartphone to LAN                       |
+| USB Hub (bus-powered)  | Supplies power to repeater and phone            |
+| Raspberry Pi 4B        | Syslog, log forwarder, future SIEM              |
+| CyberPower UPS         | Surge protection + power continuity             |
+| Desktop (Docker Host)  | ELK stack, firewall controller                  |
 
 ---
 
