@@ -3,7 +3,7 @@
 > ⚙️ This lab demonstrates an agentless log pipeline using built-in Windows tools and rsyslog on a Raspberry Pi, with a full Elastic Stack hosted in Docker for parsing and visualization.
 
 <div align="center">
-  <img src="images/Lab1.png" alt="Home Network Diagram" width="50%">
+  <img src="images/HomeNetworkLab.png" alt="Home Network Diagram" width="85%">
 </div>
 
 <br>
