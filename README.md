@@ -23,7 +23,7 @@ This repository contains lab exercises focused on securing a small office/home o
 
 ## 🧪 SOHO Network Labs
 
-- 🖨️ **[ Secure Network for Cybersecurity & Network Defense Labs](secure-soho-network-lab/)**  
+- 🖨️ **[Secure Home Lab Network for Cybersecurity Testing & Network Defense](secure-soho-network-lab/)**  
   This lab documents the architecture and configuration of a secure, segmented home network built using the ASUS RT-AX86U Pro router. It features IoT isolation, VPN Fusion split tunneling with NordVPN, firewall hardening, and centralized syslog logging via a Raspberry Pi 4.
 
 - 🖥️ **[Windows-to-Raspberry Pi Syslog Pipeline](https://github.com/SecOpsPete/secure-soho-network/tree/main/log-forwarding-pipeline)**  
