@@ -1,4 +1,4 @@
-# 🛡️ Secure Home Lab for Cybersecurity & Network Defense
+# 🛡️ Secure Home Lab Network for Cybersecurity Testing & Network Defense
 
 This lab simulates a production-grade network environment within a home setting, designed for cybersecurity experimentation, monitoring, and resilience testing. It incorporates enterprise-style features such as VLAN segmentation, centralized logging via ELK, dual-ISP failover with Speedify, VPN split tunneling, and endpoint hardening. With layered defenses, proactive visibility, and purpose-built redundancy, this environment enables hands-on testing of SIEM pipelines, threat detection, and secure architecture principles in a controlled and realistic setting.
 
