@@ -299,6 +299,18 @@ logger "Test syslog message from Raspberry Pi"
 
 ---
 
+### 🔋 Power Redundancy (UPS)
+
+The entire networking stack is protected by a **CyberPower CP1500PFCLCD PFC Sinewave UPS System**:
+
+- **Capacity:** 1500VA / 1000W
+- **Outlets:** 12 total (6 battery + surge, 6 surge-only)
+- **Features:** Active PFC compatibility, LCD diagnostics, Automatic Voltage Regulation (AVR)
+
+> This UPS ensures uninterrupted power delivery to critical infrastructure including the ASUS RT-AX86U Pro, ZenWiFi XT9 AP, Raspberry Pi syslog server, and desktop running the ELK stack. It adds resilience during short-term outages and safeguards against voltage fluctuations, aligning the lab environment more closely with enterprise continuity practices.
+
+---
+
 ## 📦 Hardware Summary
 
 | Device                 | Role                                             |
@@ -312,18 +324,6 @@ logger "Test syslog message from Raspberry Pi"
 | Raspberry Pi 4B        | Syslog, log forwarder, future SIEM              |
 | CyberPower UPS         | Surge protection + power continuity             |
 | Desktop (Docker Host)  | ELK stack, firewall controller                  |
-
----
-
-### 🔋 Power Redundancy (UPS)
-
-The entire networking stack is protected by a **CyberPower CP1500PFCLCD PFC Sinewave UPS System**:
-
-- **Capacity:** 1500VA / 1000W
-- **Outlets:** 12 total (6 battery + surge, 6 surge-only)
-- **Features:** Active PFC compatibility, LCD diagnostics, Automatic Voltage Regulation (AVR)
-
-> This UPS ensures uninterrupted power delivery to critical infrastructure including the ASUS RT-AX86U Pro, ZenWiFi XT9 AP, Raspberry Pi syslog server, and desktop running the ELK stack. It adds resilience during short-term outages and safeguards against voltage fluctuations, aligning the lab environment more closely with enterprise continuity practices.
 
 ---
 
