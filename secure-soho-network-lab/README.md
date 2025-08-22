@@ -5,7 +5,7 @@ This lab simulates a production-grade network environment within a home setting,
 ### 💻 Cybersecurity War Machine Specs:
 * Intel Core i9-13900K (24c/32t, nearly 6GHz turbo)
 * NVIDIA RTX 5070 (Blackwell, 12GB GDDR7)
-* 32GB DDR5 @ 6000+ MHz
+* 64GB DDR5 @ 6000+ MHz
 * Samsung 990 Pro 2TB + Lexar NM790 1TB (both NVMe)
 * MSI PRO Z790-P WIFI (PCIe 5.0, DDR5 support)
 * MSI MAG A850GL PSU (ATX 3.1, PCIe 5.1)
