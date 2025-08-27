@@ -116,6 +116,7 @@ To optimize wireless stability and device compatibility:
 | Admin Login Captcha | ✅ Enabled |
 | Remote Admin (WAN) | ❌ Disabled |
 | Default Admin Username Changed | ✅ Yes |
+| Router Syslog Forwarding | ✅ Enabled to Pi Syslog Server (UDP/514) |
 | WPS | ❌ Disabled |
 | UPnP | ❌ Disabled |
 | SSH Access | ❌ Disabled |
