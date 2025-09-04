@@ -241,7 +241,7 @@ The ASUS RT-AX86U Pro supports **VPN Fusion**, which allows selected devices to 
 
 ---
 
-### 🔐 Hardening and Firewall Configuration
+### 🔐 Raspberry Pi Hardening and Firewall Configuration
 
 | Feature                       | Status     | Details                                                                 |
 |------------------------------|------------|-------------------------------------------------------------------------|
