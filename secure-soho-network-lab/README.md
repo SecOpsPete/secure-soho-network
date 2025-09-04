@@ -39,7 +39,7 @@ This evolving lab serves as a realistic platform for testing endpoint defense, l
 
 ---
 
-## 🔧 Router Configuration Summary
+## 🔧 Router Config
 
 ### ✔️ Wireless Settings
 
