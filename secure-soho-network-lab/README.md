@@ -73,21 +73,59 @@ The RT-AX86U Pro router is hardened with **DNSSEC validation** and **DNS-over-TL
 ---
 
 ### 📡 ISP Redundancy and Bypass Configuration
-*(unchanged)*
+
+| Component               | Role                                                    |
+|------------------------|---------------------------------------------------------|
+| **Starlink Ethernet Adapter** | Primary uplink via Starlink satellite — Bypass Mode ✅  |
+| **Smartphone (5G)**    | Dedicated cellular uplink for ISP failover              |
+| **Speedify App**       | Channel-bonds cellular + Starlink for seamless failover |
+| **Wi-Fi Repeater**     | Bridges phone connection into the local network         |
+| **USB Hub**            | Bus-powered hub ensures stable power to repeater & phone|
+
+> **Bypass Mode:** The Starlink router is placed in bypass mode using the official **Ethernet Adapter**, allowing the RT-AX86U Pro to act as the sole DHCP/NAT/firewall authority. Cellular traffic is managed by Speedify for redundancy.
 
 ---
 
 ## 📌 Static IP Addressing Strategy
-*(unchanged)*
+To maintain consistency, reduce DHCP churn, and simplify device identification in log files and firewall rules, key infrastructure devices are assigned **static IP addresses** through the router’s DHCP reservation table.
+
+### 🎯 Why Static IPs?
+
+Static IP assignments serve several important functions in a secure and segmented home lab:
+
+- **Reliability**: Devices like the syslog server (Raspberry Pi) or VPN-routed desktops maintain the same address, ensuring uninterrupted forwarding, monitoring, and access.
+- **Log Integrity**: Centralized logging systems benefit from stable IPs, making it easier to trace events and correlate activity in Kibana dashboards.
+- **Firewall Control**: Granular UFW and router-level firewall rules depend on consistent IPs to restrict access (e.g., only allow Logstash ports from `192.168.50.3`).
+- **DNS and Hostname Mapping**: Enables optional hostname assignments for clarity across logs and tools.
+- **Reduced Conflict**: Prevents accidental DHCP assignment overlap or reassignment that could break scripts, SSH tunnels, or static routes.
+
+### 🧭 Static IP Map
+
+| Device         | MAC Address          | Static IP         | Hostname       |
+|----------------|----------------------|--------------------|----------------|
+| Peters_Desktop | `D8:43:AE:XX:XX:XX`   | `192.168.50.3`     | —              |
+| HP Office Jet  | `80:E8:2C:XX:XX:XX`   | `192.168.50.38`    | —              |
+| Raspberry Pi   | `2C:67:6B:XX:XX:XX`   | `192.168.50.100`   | `Raspberry_Pi` |
+| PVR_Notebook   | `8C:F8:C5:XX:XX:XX`   | `192.168.50.117`   | —              |
+
+> These IPs are reserved directly in the **ASUS RT-AX86U Pro** router’s DHCP static assignment table to ensure consistency across reboots and firmware updates.
+
+This strategy supports a more **deterministic, auditable, and manageable** home lab environment — particularly important for maintaining service availability and accurate logging in a network defense context.
 
 ---
 
 ### 📡 Advanced Wireless Channel Planning
-*(unchanged)*
+
+To optimize wireless stability and device compatibility:
+
+- **Channel 40** manually assigned to the 5 GHz guest network ensuring Roku TV compatibility with lower 5 GHz channels.
+- **Channel 161** assigned to secure 5 GHz to avoid co-channel interference.
+- 2.4 GHz channel fixed to **channel 11** to reduce congestion from overlapping neighboring networks.
+- Manual channel planning eliminates DFS-related issues and ensures non-interfering channel reuse. 
 
 ---
 
-## 🔐 Router Hardening & Firewall
+## 🔐 Router Hardening & Firewall Settings
 
 | Feature | Status |
 |--------|--------|
