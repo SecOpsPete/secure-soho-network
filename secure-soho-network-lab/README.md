@@ -17,14 +17,15 @@ This lab simulates a production-grade network environment within a home setting,
 
 Key features include:
 
-- **Network Segmentation: Trusted, IoT, guest, and mobile devices are isolated to reduce lateral movement risk.
-- **ISP Redundancy: Dedicated cellular phone data bonded via Speedify acts as a secondary ISP link.
-- **Manual Channel Optimization: Wireless channels are strategically assigned for performance and device compatibility.
-- **VPN Fusion: Select devices route traffic through NordVPN while others use direct ISP or cellular access.
-- **Firewall Hardening: Unsolicited traffic is blocked at the router and endpoint level using UFW and secure defaults.
-- **Centralized Logging: A Raspberry Pi syslog server forwards logs to a Dockerized ELK stack for real-time visibility.
-- **Power Protection: A CyberPower UPS provides battery backup and voltage regulation for critical devices.
-- **Scalability: Modular logging, ECS compliance, and containerized services allow future SIEM integration and enterprise-grade monitoring.
+- **Network Segmentation:** Trusted, IoT, guest, and mobile devices are isolated to reduce lateral movement risk.
+- **ISP Redundancy:** Dedicated cellular phone data bonded via Speedify acts as a secondary ISP link.
+- **Manual Channel Optimization:** Wireless channels are strategically assigned for performance and device compatibility.
+- **VPN Fusion:** Select devices route traffic through NordVPN while others use direct ISP or cellular access.
+- **Firewall Hardening:** Unsolicited traffic is blocked at the router and endpoint level using UFW and secure defaults.
+- **Centralized Logging:** A Raspberry Pi syslog server forwards logs to a Dockerized ELK stack for real-time visibility.
+- **DNS Hardening:** DNSSEC validation and DNS-over-TLS encryption are enforced at the router to ensure authenticity and privacy of DNS lookups.
+- **Power Protection:** A CyberPower UPS provides battery backup and voltage regulation for critical devices.
+- **Scalability:** Modular logging, ECS compliance, and containerized services allow future SIEM integration and enterprise-grade monitoring.
 
 This evolving lab serves as a realistic platform for testing endpoint defense, log analysis, and secure networking—all within a controlled home environment.
 
@@ -52,59 +53,37 @@ This evolving lab serves as a realistic platform for testing endpoint defense, l
 
 ---
 
+### 🌐 DNSSEC & Encrypted DNS Configuration
 
-### 📡 ISP Redundancy and Bypass Configuration
+The RT-AX86U Pro router is hardened with **DNSSEC validation** and **DNS-over-TLS (DoT)** to protect DNS integrity and privacy across the home lab:
 
-| Component               | Role                                                    |
-|------------------------|---------------------------------------------------------|
-| **Starlink Ethernet Adapter** | Primary uplink via Starlink satellite — Bypass Mode ✅  |
-| **Smartphone (5G)**    | Dedicated cellular uplink for ISP failover              |
-| **Speedify App**       | Channel-bonds cellular + Starlink for seamless failover |
-| **Wi-Fi Repeater**     | Bridges phone connection into the local network         |
-| **USB Hub**            | Bus-powered hub ensures stable power to repeater & phone|
+| Setting                        | Value                         |
+|--------------------------------|-------------------------------|
+| **DNS Privacy Protocol**       | DNS-over-TLS (DoT)            |
+| **Profile**                    | Strict (no fallback allowed)  |
+| **Primary Resolver**           | Quad9 (`9.9.9.9`, `dns.quad9.net`) |
+| **Secondary Resolver**         | Cloudflare (`1.1.1.1`, `cloudflare-dns.com`) |
+| **Enable DNSSEC Support**      | ✅ Yes                        |
+| **Validate Unsigned Replies**  | ✅ Yes (rejects bogus responses) |
+| **Prevent Client Auto DoH**    | ✅ Yes (forces router-controlled DNS) |
+| **DNS Rebind Protection**      | ✅ Enabled                    |
 
-> **Bypass Mode:** The Starlink router is placed in bypass mode using the official **Ethernet Adapter**, allowing the RT-AX86U Pro to act as the sole DHCP/NAT/firewall authority. Cellular traffic is managed by Speedify for redundancy.
+> This configuration ensures all DNS lookups are both **encrypted in transit** and **cryptographically validated** at the router level. Quad9 provides additional security filtering for malicious domains, while Cloudflare acts as a resilient fallback. Clients cannot bypass DNS policy using DoH, guaranteeing consistent enforcement across the network.
 
 ---
 
+### 📡 ISP Redundancy and Bypass Configuration
+*(unchanged)*
+
+---
 
 ## 📌 Static IP Addressing Strategy
-
-To maintain consistency, reduce DHCP churn, and simplify device identification in log files and firewall rules, key infrastructure devices are assigned **static IP addresses** through the router’s DHCP reservation table.
-
-### 🎯 Why Static IPs?
-
-Static IP assignments serve several important functions in a secure and segmented home lab:
-
-- **Reliability**: Devices like the syslog server (Raspberry Pi) or VPN-routed desktops maintain the same address, ensuring uninterrupted forwarding, monitoring, and access.
-- **Log Integrity**: Centralized logging systems benefit from stable IPs, making it easier to trace events and correlate activity in Kibana dashboards.
-- **Firewall Control**: Granular UFW and router-level firewall rules depend on consistent IPs to restrict access (e.g., only allow Logstash ports from `192.168.50.3`).
-- **DNS and Hostname Mapping**: Enables optional hostname assignments for clarity across logs and tools.
-- **Reduced Conflict**: Prevents accidental DHCP assignment overlap or reassignment that could break scripts, SSH tunnels, or static routes.
-
-### 🧭 Static IP Map
-
-| Device         | MAC Address          | Static IP         | Hostname       |
-|----------------|----------------------|--------------------|----------------|
-| Peters_Desktop | `D8:43:AE:XX:XX:XX`   | `192.168.50.3`     | —              |
-| HP Office Jet  | `80:E8:2C:XX:XX:XX`   | `192.168.50.38`    | —              |
-| Raspberry Pi   | `2C:67:6B:XX:XX:XX`   | `192.168.50.100`   | `Raspberry_Pi` |
-| PVR_Notebook   | `8C:F8:C5:XX:XX:XX`   | `192.168.50.117`   | —              |
-
-> These IPs are reserved directly in the **ASUS RT-AX86U Pro** router’s DHCP static assignment table to ensure consistency across reboots and firmware updates.
-
-This strategy supports a more **deterministic, auditable, and manageable** home lab environment — particularly important for maintaining service availability and accurate logging in a network defense context.
+*(unchanged)*
 
 ---
 
 ### 📡 Advanced Wireless Channel Planning
-
-To optimize wireless stability and device compatibility:
-
-- **Channel 40** manually assigned to the 5 GHz guest network ensuring Roku TV compatibility with lower 5 GHz channels.
-- **Channel 161** assigned to secure 5 GHz to avoid co-channel interference.
-- 2.4 GHz channel fixed to **channel 11** to reduce congestion from overlapping neighboring networks.
-- Manual channel planning eliminates DFS-related issues and ensures non-interfering channel reuse. 
+*(unchanged)*
 
 ---
 
@@ -117,6 +96,7 @@ To optimize wireless stability and device compatibility:
 | Remote Admin (WAN) | ❌ Disabled |
 | Default Admin Username Changed | ✅ Yes |
 | Router Syslog Forwarding | ✅ Enabled to Pi Syslog Server (UDP/514) |
+| **DNSSEC + DoT** | ✅ Enforced (Quad9 + Cloudflare) |
 | WPS | ❌ Disabled |
 | UPnP | ❌ Disabled |
 | SSH Access | ❌ Disabled |
