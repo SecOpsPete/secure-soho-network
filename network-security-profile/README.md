@@ -105,6 +105,5 @@ My home lab reflects a professional-grade security architecture in a SOHO enviro
 I’ve combined DNSSEC-hardened DNS resolution, IoT network isolation via my mesh node, host-level hardening, syslog/ELK monitoring, and CGNAT-backed external shielding.  
 
 With future enhancements like Sysmon logging, SIEM integration, and automated patch reporting, I’ll continue pushing this lab closer to enterprise standards.
-```
 
-Want me to also update your **diagram** so it shows the mesh node isolating IoT and the DNSSEC protection layer?
+
