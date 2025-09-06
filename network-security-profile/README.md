@@ -1,6 +1,9 @@
+Got it 👍 — here’s your **Home Network Security Posture Audit** rewritten in the first person, so it reads as if you’re describing your own work:
+
+```markdown
 # 🛡️ Home Network Security Posture Audit
 
-This audit summarizes the current state of the SOHO (Small Office/Home Office) network security lab. It reflects layered defenses, segmentation, endpoint hardening, and monitoring practices implemented as of June 2025.
+This audit summarizes the current state of my SOHO (Small Office/Home Office) network security lab. It reflects the layered defenses, segmentation, endpoint hardening, and monitoring practices I have in place as of September 2025.
 
 ---
 
@@ -8,13 +11,13 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 
 | Category                       | Posture     | Notes                                                                 |
 |-------------------------------|-------------|-----------------------------------------------------------------------|
-| **Network Segmentation**      | ★★★★★       | IoT VLAN separated from main network; strict inter-VLAN control       |
-| **Router Hardening**          | ★★★★☆       | High-end router with static IPs, local management, and secure WiFi    |
-| **Endpoint Protection**       | ★★★★☆       | BitLocker, Defender, Malwarebytes, Windows Firewall hardening         |
-| **Printer Security**          | ★★★★★       | Static IP, strict inbound/outbound rules, public port blocking        |
-| **Threat Monitoring**         | ★★★★☆       | Raspberry Pi syslog server + ELK integration + Fail2Ban              |
-| **External Exposure**         | ★★★★★       | CGNAT via Starlink, no services exposed, VPN required outbound        |
-| **Vulnerability Management**  | ★★★★☆       | Manual patching + Nessus scanning in place                            |
+| **Network Segmentation**      | ★★★★★       | IoT VLAN isolated via mesh node, strict inter-VLAN firewall rules     |
+| **Router Hardening**          | ★★★★★       | ASUS RT-AX86U Pro + AiMesh node; DNSSEC, static IPs, secure WiFi      |
+| **Endpoint Protection**       | ★★★★☆       | BitLocker, Defender, Malwarebytes, firewall tuning, Sysmon planned   |
+| **Printer Security**          | ★★★★★       | Static IP, inbound blocked, outbound restricted, no public exposure   |
+| **Threat Monitoring**         | ★★★★☆       | Raspberry Pi syslog + ELK stack + Fail2Ban + Nessus                   |
+| **External Exposure**         | ★★★★★       | CGNAT via Starlink, no inbound services, VPN enforced outbound        |
+| **Vulnerability Management**  | ★★★★☆       | Windows + firmware patching, Nessus scanning, roadmap to Wazuh        |
 
 <br>
 <div align="center">
@@ -25,69 +28,86 @@ This audit summarizes the current state of the SOHO (Small Office/Home Office) n
 
 ## 🧱 Network Segmentation & VLANs
 
-- 🛑 IoT devices are isolated on a separate guest SSID/VLAN
-- ✅ Main VLAN reserved for trusted devices (PCs, printer, Pi)
-- 🔄 No lateral access allowed from IoT → Main
-- 🎯 Static IP reservations in place for key devices
+- 🛑 I keep IoT devices isolated on a guest SSID/VLAN through my **AX55 mesh node**
+- ✅ My main VLAN is reserved for trusted devices (desktop, printer, Pi, laptop)
+- 🔄 No lateral access is allowed from IoT → Main
+- 🎯 Static IP reservations are configured for all critical nodes (router, Pi, printer, desktop)
+- 🔧 I also use VLAN assignments for my future Pi forensic station
 
 ---
 
 ## 🔒 Endpoint & Printer Hardening
 
-- 🖥️ Windows Firewall (`wf.msc`) rules applied:
-  - Allow printing only to specific IP/ports
-  - Block printer ports (`9100`, `515`, `631`) on public profiles
-  - Block all unsolicited inbound connections from printer
-- 📦 HP Smart allowed outbound for cloud services
-- 🛡️ BitLocker enabled
-- 🦠 Malwarebytes + Microsoft Defender coexistence
-- 🔐 Printer static IP: `192.168.50.38`
+- 🖥️ On my Windows 11 hosts:
+  - BitLocker full-disk encryption is enabled
+  - Malwarebytes runs alongside Microsoft Defender
+  - Sysmon and event forwarding are on my roadmap
+- 🖨️ Printer:
+  - Static IP: `192.168.50.38`
+  - Blocked ports (`9100`, `515`, `631`) on public profiles
+  - Inbound is restricted to my trusted desktop only
+  - Outbound is limited to HP Smart cloud services
+- 🛡️ I’ve tuned my firewall with custom rules and logging
 
 ---
 
 ## 🛰️ Router & Perimeter Defense
 
-- Router: **ASUS RT-AX86U Pro**
-- WAN: **Starlink with CGNAT (no public IP exposure)**
-- VPN: **NordVPN active on endpoints**
-- DHCP reservations configured
-- Admin GUI accessed via local IP (`192.168.50.1`)
-- Guest network isolation enforced
+- Core Router: **ASUS RT-AX86U Pro**
+- Mesh Node: **ASUS RT-AX55** (handles IoT VLAN isolation)
+- WAN: **Starlink with CGNAT** (no inbound exposure)
+- VPN:
+  - **NordVPN on endpoints** (with plans for router-level policy rules)
+  - Future: employer VPN integration (OpenVPN/IPSec)
+- **DNSSEC is enabled** to prevent DNS spoofing
+- DHCP reservations are active
+- The admin GUI is only accessible from the LAN
+- Guest network isolation is enforced
 
 ---
 
 ## 🔍 Threat Detection & Monitoring
 
-- ✅ Raspberry Pi hardened and configured as a dedicated syslog server
+- ✅ I use a Raspberry Pi as a hardened syslog server:
   - SSH keys only, password login disabled
-  - UFW firewall active with port-level controls
-  - SSH restricted to LAN devices only
-  - Fail2Ban active to prevent brute-force attacks
-- 📡 Pi forwards syslog to ELK stack on desktop for live monitoring
-- 🧱 ELK ports (5000, 9200, 5601) restricted to desktop IP only
-- ✅ Nessus Essentials scanning partially implemented
-- 📝 Windows Event Forwarding or Sysmon still under evaluation
-- 🎯 Future: Consider SIEM ingestion (Wazuh, Splunk, or Graylog)
+  - UFW firewall rules in place
+  - SSH restricted to LAN only
+  - Fail2Ban active
+- 📡 The Pi forwards logs to my **ELK stack on the Windows desktop**
+  - Logstash parses syslog
+  - Kibana dashboards give me live review
+  - ELK ports are locked down to `192.168.50.3`
+- 🔎 Nessus Essentials runs regular scans
+- 📝 Sysmon + Windows Event Forwarding are planned
+- 🔮 Longer term, I may feed logs into a SIEM (Wazuh, Splunk, or Graylog)
 
 ---
 
 ## 🌐 Internet Exposure Controls
 
-- ✅ CGNAT via Starlink blocks unsolicited inbound traffic
-- 🔒 No port forwarding or public web services exposed
-- 🔎 External scans (e.g., Shodan, ShieldsUP) yield no open ports
-- 🌍 VPN used for secure outbound browsing
+- ✅ CGNAT provides default inbound shielding
+- 🔒 I don’t use port forwarding or a DMZ
+- 🔎 Shodan/ShieldsUP scans confirm zero open ports
+- 🌍 I rely on VPNs for secure outbound browsing
+- 🚫 I removed NXLog due to instability and now rely on Logstash for log forwarding
 
 ---
 
 ## 🧰 Vulnerability Management
 
-- 🔎 Nessus Essentials scanning PC, printer, and router for CVEs
-- 🔧 Manual Windows updates + vendor firmware checks
-- 📘 Future goal: Document vulnerability findings per scan cycle
+- 🔎 I use Nessus Essentials to scan my printer, PC, and router
+- 🔧 I apply Windows updates and vendor firmware updates on a routine cycle
+- 📘 My goal is to formalize a scan → remediate → document cycle
+- 🚀 DNSSEC is now part of my baseline router hardening
 
 ---
 
 ## 🧠 Takeaway
 
-This lab reflects professional-grade SOHO security architecture. It combines network segmentation, host-level hardening, zero-trust SSH policy, real-time monitoring, and external exposure mitigation — all within a streamlined and replicable home setup.
+My home lab reflects a professional-grade security architecture in a SOHO environment.  
+I’ve combined DNSSEC-hardened DNS resolution, IoT network isolation via my mesh node, host-level hardening, syslog/ELK monitoring, and CGNAT-backed external shielding.  
+
+With future enhancements like Sysmon logging, SIEM integration, and automated patch reporting, I’ll continue pushing this lab closer to enterprise standards.
+```
+
+Want me to also update your **diagram** so it shows the mesh node isolating IoT and the DNSSEC protection layer?
