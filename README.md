@@ -32,7 +32,7 @@ Forwards Windows logs to a Raspberry Pi syslog server using Task Scheduler and P
 - 🧠 **[Practical KQL Queries for Detecting SSH & Linux Intrusions](https://github.com/SecOpsPete/secure-soho-network/tree/main/kql-linux-threat-queries)**  
   A collection of Kibana Query Language (KQL) filters designed to detect SSH brute force attempts, failed privilege escalation, suspicious shell spawns, outbound reverse shell activity, and more. Built from syslog data ingested into the ELK stack via Raspberry Pi. Ideal for SOC analysts, home lab defenders, or anyone operating a Linux detection environment.
 
-- 💽 **[Isolated USB Malware Checking Station](https://github.com/secure-soho-network/USB-malware-checking-station/README.md)**  
+- 💽 **[Isolated USB Malware Checking Station](https://github.com/SecOpsPete/secure-soho-network/tree/main/USB-malware-checking-station)**  
   This project demonstrates how I built a Raspberry Pi–based station to safely screen USB drives for malware. It uses read-only mounting, ClamAV signature scanning, and log capture on an external SSD. If suspicious files are detected, the workflow escalates to full forensic imaging and offline analysis in Autopsy, ensuring evidence integrity without risking my main systems.
 
 - 🖨️ **[Printer Firewall Hardening](https://github.com/SecOpsPete/cybersecurity-tools/blob/main/printer-firewall-hardening/README.md)**  
