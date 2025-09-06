@@ -1,6 +1,3 @@
-Got it 👍 — here’s your **Home Network Security Posture Audit** rewritten in the first person, so it reads as if you’re describing your own work:
-
-```markdown
 # 🛡️ Home Network Security Posture Audit
 
 This audit summarizes the current state of my SOHO (Small Office/Home Office) network security lab. It reflects the layered defenses, segmentation, endpoint hardening, and monitoring practices I have in place as of September 2025.
