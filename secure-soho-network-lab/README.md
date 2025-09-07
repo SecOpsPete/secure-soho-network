@@ -12,7 +12,7 @@ This lab simulates a production-grade network environment within a home setting,
 <br>
 
 <div align="center">
-  <img src="images/HomeNetworkLab.png" alt="Home Network Diagram" width="85%">
+  <img src="images/HomeNetworkLab.png" alt="Home Network Diagram" width="70%">
 </div>
 
 Key features include:
