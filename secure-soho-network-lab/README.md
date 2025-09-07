@@ -34,7 +34,7 @@ This evolving lab serves as a realistic platform for testing endpoint defense, l
 ## 🌐 Network Diagram
 
 <div align="center">
-  <img src="images/Network1.png" alt="HomeLabNetwork" width="85%">
+  <img src="images/HomeLabNetwork.png" alt="HomeLabNetwork" width="85%">
 </div>
 
 ---
