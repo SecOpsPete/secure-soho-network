@@ -49,7 +49,7 @@ Forwards Windows logs to a Raspberry Pi syslog server using Task Scheduler and P
 <table>
   <tr>
     <td align="center">
-      <img src="secure-soho-network-lab/images/HomeLabNetwork.png" width="45%"><br>
+      <img src="secure-soho-network-lab/images/HomeLabNetwork.png" width="65%"><br>
       <sub>Secure SOHO Network</sub>
     </td>
     <td align="center">
